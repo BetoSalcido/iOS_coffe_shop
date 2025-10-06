@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SplashView: View {
+    let onContinue: () -> Void
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -39,9 +41,9 @@ struct SplashView: View {
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 10)
 
-                        NavigationLink {
-                            Text("Beto")
-                        } label: {
+                        Button(action: {
+                            onContinue()
+                        }) {
                             Text("Get Started")
                                 .font(.headline)
                                 .bold()
@@ -63,5 +65,5 @@ struct SplashView: View {
 }
 
 #Preview {
-    SplashView()
+    SplashView(onContinue: {})
 }

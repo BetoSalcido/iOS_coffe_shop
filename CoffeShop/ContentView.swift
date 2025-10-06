@@ -8,8 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var showMain: Bool = false
+
     var body: some View {
-        SplashView()
+        Group {
+            if showMain {
+                MainTabBarView()
+            } else {
+                SplashView {
+                    showMain = true
+                }
+            }
+        }
     }
 }
 
