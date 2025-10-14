@@ -13,16 +13,15 @@ struct HomeHeaderView: View {
     var body: some View {
         ZStack(alignment: .leading) {
             Color.init(hex: "#313131")
-                .ignoresSafeArea(.all, edges: .top)
             
             VStack(alignment: .leading, spacing: 10) {
                 Text("Location")
-                    .font(.caption)
+                    .font(.footnote)
                     .foregroundStyle(.white)
                 
                 HStack {
                     Text("Culiacán, Sinaloa")
-                        .font(.caption)
+                        .font(.headline)
                         .foregroundStyle(.white)
                         .fontWeight(.semibold)
                     
@@ -62,23 +61,10 @@ struct HomeHeaderView: View {
                 }
                 .frame(height: 44)
                 .padding(.vertical)
-                
-                Spacer()
             }
             .padding(.horizontal)
-            .padding(.top, 50)
-            .padding(.bottom)
-            
-            // Banner image positioned at the bottom center
-            VStack(alignment: .center) {
-                Spacer()
-                Image("BannerImage")
-                    .imageScale(.large)
-                    .offset(y: 110) // Adjust this value to position it between views
-            }
-            .frame(maxWidth: .infinity)
         }
-        .frame(height: 200)
+        .frame(height: 150, alignment: .bottom)
     }
 }
 
