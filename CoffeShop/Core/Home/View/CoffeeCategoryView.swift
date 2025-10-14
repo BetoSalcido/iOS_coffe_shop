@@ -24,7 +24,7 @@ struct CoffeeCategoryView: View {
                     .padding(.vertical, 10)
             }
         }
-        .background(category.isActive ? Color.init(hex: "#C67C4E") : .white)
+        .background(category.isActive ? Color.Buttons.active : Color.Buttons.inactive)
         .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }

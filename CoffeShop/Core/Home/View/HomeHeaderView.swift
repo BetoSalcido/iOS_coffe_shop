@@ -12,7 +12,7 @@ struct HomeHeaderView: View {
     
     var body: some View {
         ZStack(alignment: .leading) {
-            Color.init(hex: "#313131")
+            Color.Background.dark
             
             VStack(alignment: .leading, spacing: 10) {
                 Text("Location")

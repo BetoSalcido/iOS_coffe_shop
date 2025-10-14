@@ -8,6 +8,7 @@
 import SwiftUI
 
 extension Color {
+    
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int: UInt64 = 0
@@ -30,5 +31,16 @@ extension Color {
             blue:  Double(b) / 255,
             opacity: Double(a) / 255
         )
+    }
+    
+    
+    enum Buttons {
+        static let active = Color("ActiveButton")
+        static let inactive = Color("Inactivebutton")
+    }
+    
+    enum Background {
+        static let light = Color("LightBackground")
+        static let dark = Color("DarkBackground")
     }
 }

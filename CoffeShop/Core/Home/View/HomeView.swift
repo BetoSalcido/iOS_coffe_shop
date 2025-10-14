@@ -36,7 +36,7 @@ struct HomeView: View {
                 
                 // Only top safe area gets the color
                 GeometryReader { geo in
-                    Color.init(hex: "#313131")
+                    Color.Background.dark
                         .frame(height: geo.safeAreaInsets.top)
                         .ignoresSafeArea(edges: .top)
                         .allowsHitTesting(false)
