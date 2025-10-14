@@ -13,7 +13,7 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .top) {
+            ZStack {
                 ScrollView {
                     LazyVStack(spacing: 0) {
                         HomeHeaderView()
@@ -22,7 +22,9 @@ struct HomeView: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 16) {
                                 ForEach(viewModel.categories, id: \.self) { category in
-                                    CoffeeCategoryView(category: category)
+                                    CoffeeCategoryView(category: category) {
+                                        viewModel.selectCategory(category.id)
+                                    }
                                 }
                             }
                             .padding(.horizontal)
