@@ -30,7 +30,7 @@ struct CoffeeCategoryView: View {
 }
 
 #Preview {
-    CoffeeCategoryView(category: CoffeCategoriesPreview().categories.first!) {
+    CoffeeCategoryView(category: DeveloperPreview().categories.first!) {
         print("Category tapped")
     }
 }

@@ -11,6 +11,10 @@ import Foundation
 class HomeService {
     
     func fetchCoffeeCategories() async throws -> [CoffeeCategory] {
-        return CoffeCategoriesPreview().categories
+        return DeveloperPreview().categories
+    }
+    
+    func fetchCoffes() async throws -> [Coffee] {
+        return DeveloperPreview().coffees
     }
 }

@@ -30,6 +30,8 @@ struct HomeView: View {
                             .padding(.horizontal)
                             .padding(.top)
                         }
+                        
+                        CoffeeGridView(coffeeList: viewModel.coffees)
                     }
                 }
                 .background(.white)

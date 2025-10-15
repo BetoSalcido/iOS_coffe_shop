@@ -10,16 +10,19 @@ import Foundation
 class HomeViewModel: ObservableObject {
     
     @Published var categories = [CoffeeCategory]()
+    @Published var coffees = [Coffee]()
     @Published var selectedCategoryId: String?
     
     private let service: HomeService
     private var categoriesCopy = [CoffeeCategory]()
+    private var coffeesCopy = [Coffee]()
     
     init(service: HomeService) {
         self.service = service
         
         Task {
             await fetchCategories()
+            await fetchCoffes()
         }
     }
 }
@@ -40,6 +43,16 @@ private extension HomeViewModel {
             }
         } catch {
             print("[DEBUG]: Error fetching categories: \(error)")
+        }
+    }
+    
+    func fetchCoffes() async {
+        do {
+            let coffees = try await service.fetchCoffes()
+            self.coffees = coffees
+            self.coffeesCopy = coffees
+        } catch {
+            print("[DEBUG]: Error fetching coffees: \(error)")
         }
     }
     
