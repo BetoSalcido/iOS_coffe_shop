@@ -23,7 +23,7 @@ struct HomeView: View {
                             HStack(spacing: 16) {
                                 ForEach(viewModel.categories, id: \.self) { category in
                                     CoffeeCategoryView(category: category) {
-                                        viewModel.selectCategory(category.id)
+                                        viewModel.handleCategorySelecionWith(category.id)
                                     }
                                 }
                             }
@@ -31,10 +31,17 @@ struct HomeView: View {
                             .padding(.top)
                         }
                         
-                        CoffeeGridView(coffeeList: viewModel.coffees)
+                        CoffeeGridView(coffeeList: viewModel.coffees) {
+                            viewModel.handleCoffeSelecionWith($0)
+                        }
                     }
                 }
                 .background(.white)
+                .navigationDestination(item: $viewModel.selectedCoffee) { coffee in
+                    NavigationLink(value: coffee) {
+                        CoffeeDetailView(coffee: coffee)
+                    }
+                }
                 
                 // Only top safe area gets the color
                 GeometryReader { geo in

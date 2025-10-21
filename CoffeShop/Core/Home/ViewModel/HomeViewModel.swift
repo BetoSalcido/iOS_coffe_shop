@@ -12,6 +12,7 @@ class HomeViewModel: ObservableObject {
     @Published var categories = [CoffeeCategory]()
     @Published var coffees = [Coffee]()
     @Published var selectedCategoryId: String?
+    @Published var selectedCoffee: Coffee?
     
     private let service: HomeService
     private var categoriesCopy = [CoffeeCategory]()
@@ -68,12 +69,16 @@ private extension HomeViewModel {
 // MARK: - Public Methods
 extension HomeViewModel {
     
-    func selectCategory(_ categoryId: String) {
+    func handleCategorySelecionWith(_ categoryId: String) {
         selectedCategoryId = categoryId
         updateCategoriesSelection()
     }
     
     func getSelectedCategory() -> CoffeeCategory? {
         return categories.first { $0.id == selectedCategoryId }
+    }
+    
+    func handleCoffeSelecionWith(_ coffee: Coffee) {
+        selectedCoffee = coffee
     }
 }

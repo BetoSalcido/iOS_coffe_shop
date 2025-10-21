@@ -10,13 +10,17 @@ import SwiftUI
 struct CoffeeGridView: View {
     
     let coffeeList: [Coffee]
+    let onTap: (Coffee) -> Void
+    
     private let columns = [GridItem(.adaptive(minimum: 160), spacing: 16)];
     
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(coffeeList, id:  \.self) { item in
-                    CoffeeView(coffe: item)
+                    CoffeeView(coffe: item, onTap: {
+                        onTap(item)
+                    })
                         .frame(maxWidth: .infinity)
                         .background(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
@@ -29,5 +33,7 @@ struct CoffeeGridView: View {
 }
 
 #Preview {
-    CoffeeGridView(coffeeList: DeveloperPreview().coffees)
+    CoffeeGridView(coffeeList: DeveloperPreview().coffees) { _ in 
+        print("Coffee tapped")
+    }
 }
