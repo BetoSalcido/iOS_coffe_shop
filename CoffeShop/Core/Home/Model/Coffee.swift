@@ -11,6 +11,7 @@ struct Coffee: Identifiable, Codable, Hashable {
     let id: String
     let name: String
     let description: String
+    let longDescription: String
     let rating: Double
     let price: Double
     let imageURL: String

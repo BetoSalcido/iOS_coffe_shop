@@ -13,19 +13,16 @@ struct CoffeeCategoryView: View {
     let onTap: () -> Void
     
     var body: some View {
-        HStack {
-            Button {
-                onTap()
-            } label: {
-                Text(category.name)
-                    .font(.footnote)
-                    .foregroundStyle(category.isActive ? .white : .black)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-            }
+        Button(action: onTap) {
+            Text(category.name)
+                .font(.footnote)
+                .foregroundStyle(category.isActive ? .white : .black)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .background(category.isActive ? Color.Buttons.active : Color.Buttons.inactive)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
         }
-        .background(category.isActive ? Color.Buttons.active : Color.Buttons.inactive)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .buttonStyle(.plain)
     }
 }
 

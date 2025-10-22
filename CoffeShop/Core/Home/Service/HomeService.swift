@@ -18,7 +18,8 @@ class HomeService {
         return DeveloperPreview().coffees
     }
     
-//    func fetchCoffeeDetail(id: Int) async throws -> CoffeeDetail {
-//        return DeveloperPreview().coffees.first(where: { $0.id == id }) ?? .self
-//    }
+    func fetchCoffeeDetail(_ coffeId: String) async throws -> Coffee {
+        let coffees = DeveloperPreview().coffees
+        return coffees.first(where: { $0.id == coffeId }) ?? coffees[0]
+    }
 }
