@@ -43,4 +43,8 @@ extension Color {
         static let light = Color("LightBackground")
         static let dark = Color("DarkBackground")
     }
+    
+    enum Text {
+        static let primary = Color("PrimaryText")
+    }
 }

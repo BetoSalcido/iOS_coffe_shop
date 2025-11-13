@@ -9,7 +9,6 @@ import SwiftUI
 
 struct CoffeeDetailView: View {
     
-    
     @StateObject private var viewModel: CoffeeDetailViewModel
 
     init(coffee: Coffee, service: HomeService = HomeService()) {
@@ -18,11 +17,20 @@ struct CoffeeDetailView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                CoffeeDetailHeaderView(coffee: viewModel.coffeeDetail)
-                CoffeeDetailBodyView(coffee: viewModel.coffeeDetail) {
-                    viewModel.handleCoffeSizeSelecionWith($0)
+            if let detail = viewModel.coffeeDetail {
+                ScrollView {
+                    CoffeeDetailHeaderView(coffee: detail)
+                    CoffeeDetailBodyView(coffee: detail) {
+                        viewModel.handleCoffeSizeSelecionWith($0)
+                    }
                 }
+                .background(Color.init(hex: "#F9F9F9"))
+                
+                CoffeeDetailFooterView(coffee: detail) {
+                    
+                }
+            } else {
+                
             }
         }
     }
