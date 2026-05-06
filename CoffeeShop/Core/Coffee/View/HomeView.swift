@@ -8,9 +8,14 @@
 import SwiftUI
 
 struct HomeView: View {
-    
-    @StateObject var viewModel = HomeViewModel(service: CoffeeCatalogService())
-    
+    private let catalogService: any CoffeeCatalogProviding
+    @StateObject private var viewModel: HomeViewModel
+
+    init(catalogService: any CoffeeCatalogProviding) {
+        self.catalogService = catalogService
+        _viewModel = StateObject(wrappedValue: HomeViewModel(service: catalogService))
+    }
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -39,7 +44,7 @@ struct HomeView: View {
                 .background(.white)
                 .navigationDestination(item: $viewModel.selectedCoffee) { coffee in
                     NavigationLink(value: coffee) {
-                        CoffeeDetailView(coffee: coffee)
+                        CoffeeDetailView(coffee: coffee, catalogService: catalogService)
                     }
                 }
                 
@@ -56,5 +61,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    HomeView(catalogService: CoffeeCatalogService())
 }

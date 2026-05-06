@@ -12,11 +12,11 @@ class CoffeeDetailViewModel: ObservableObject {
     @Published var coffeeDetail: Coffee?
     @Published var selectedSizeId: String?
     
-    private let service: CoffeeCatalogService
+    private let service: any CoffeeCatalogProviding
     private let coffee: Coffee
     private var coffeeDetailCopy: Coffee?
 
-    init(service: CoffeeCatalogService, coffee: Coffee) {
+    init(service: any CoffeeCatalogProviding, coffee: Coffee) {
         self.service = service
         self.coffee = coffee
         

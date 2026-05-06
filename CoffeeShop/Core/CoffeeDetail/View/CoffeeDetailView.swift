@@ -11,8 +11,8 @@ struct CoffeeDetailView: View {
     
     @StateObject private var viewModel: CoffeeDetailViewModel
 
-    init(coffee: Coffee, service: CoffeeCatalogService = CoffeeCatalogService()) {
-        _viewModel = StateObject(wrappedValue: CoffeeDetailViewModel(service: service, coffee: coffee))
+    init(coffee: Coffee, catalogService: any CoffeeCatalogProviding) {
+        _viewModel = StateObject(wrappedValue: CoffeeDetailViewModel(service: catalogService, coffee: coffee))
     }
     
     var body: some View {
@@ -37,5 +37,5 @@ struct CoffeeDetailView: View {
 }
 
 #Preview {
-    CoffeeDetailView(coffee: DeveloperPreview().coffees[0])
+    CoffeeDetailView(coffee: DeveloperPreview().coffees[0], catalogService: CoffeeCatalogService())
 }

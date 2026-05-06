@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
+    let catalogService: any CoffeeCatalogProviding
     @State private var showMain: Bool = false
 
     var body: some View {
         Group {
             if showMain {
-                MainTabBarView()
+                MainTabBarView(catalogService: catalogService)
             } else {
                 SplashView {
                     showMain = true
@@ -24,5 +25,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(catalogService: CoffeeCatalogService())
 }

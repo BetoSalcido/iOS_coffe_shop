@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CoffeeCatalogService {
+final class CoffeeCatalogService: CoffeeCatalogProviding {
 
     func fetchCoffeeCategories() async throws -> [CoffeeCategory] {
         return DeveloperPreview().categories

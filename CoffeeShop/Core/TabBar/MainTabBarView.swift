@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct MainTabBarView: View {
-    
+    let catalogService: any CoffeeCatalogProviding
+
     var body: some View {
         TabView {
-            HomeView()
+            HomeView(catalogService: catalogService)
                 .tabItem {
                     Image("HomeIcon")
                 }
@@ -39,5 +40,5 @@ struct MainTabBarView: View {
 }
 
 #Preview {
-    MainTabBarView()
+    MainTabBarView(catalogService: CoffeeCatalogService())
 }
