@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @StateObject var viewModel = HomeViewModel(service: HomeService())
+    @StateObject var viewModel = HomeViewModel(service: CoffeeCatalogService())
     
     var body: some View {
         NavigationStack {

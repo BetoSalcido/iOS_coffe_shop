@@ -11,7 +11,7 @@ struct CoffeeDetailView: View {
     
     @StateObject private var viewModel: CoffeeDetailViewModel
 
-    init(coffee: Coffee, service: HomeService = HomeService()) {
+    init(coffee: Coffee, service: CoffeeCatalogService = CoffeeCatalogService()) {
         _viewModel = StateObject(wrappedValue: CoffeeDetailViewModel(service: service, coffee: coffee))
     }
     

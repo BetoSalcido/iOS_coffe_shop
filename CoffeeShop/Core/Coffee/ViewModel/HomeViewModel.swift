@@ -14,11 +14,11 @@ class HomeViewModel: ObservableObject {
     @Published var selectedCategoryId: String?
     @Published var selectedCoffee: Coffee?
     
-    private let service: HomeService
+    private let service: CoffeeCatalogService
     private var categoriesCopy = [CoffeeCategory]()
     private var coffeesCopy = [Coffee]()
     
-    init(service: HomeService) {
+    init(service: CoffeeCatalogService) {
         self.service = service
         
         Task {

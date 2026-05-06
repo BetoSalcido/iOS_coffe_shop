@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Sample catalog data for SwiftUI previews and the mock `HomeService` implementation.
+/// Sample catalog data for SwiftUI previews and the mock `CoffeeCatalogService` implementation.
 /// Not part of the domain model layer.
 final class DeveloperPreview {
 
