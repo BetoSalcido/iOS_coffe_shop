@@ -1,5 +1,5 @@
 //
-//  CoffeeCategoryView.swift
+//  CatalogCategoryView.swift
 //  CoffeeShop
 //
 //  Created by Beto Salcido on 13/10/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CoffeeCategoryView: View {
+struct CatalogCategoryView: View {
     
     let category: CoffeeCategory
     let onTap: () -> Void
@@ -27,7 +27,7 @@ struct CoffeeCategoryView: View {
 }
 
 #Preview {
-    CoffeeCategoryView(category: DeveloperPreview().categories.first!) {
+    CatalogCategoryView(category: DeveloperPreview().categories.first!) {
         print("Category tapped")
     }
 }

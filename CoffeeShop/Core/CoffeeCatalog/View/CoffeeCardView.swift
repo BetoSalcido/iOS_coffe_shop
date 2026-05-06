@@ -1,5 +1,5 @@
 //
-//  CoffeeView.swift
+//  CoffeeCardView.swift
 //  CoffeeShop
 //
 //  Created by Beto Salcido on 14/10/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CoffeeView: View {
+struct CoffeeCardView: View {
     let coffee: Coffee
     let onTap: () -> Void
 
@@ -66,7 +66,7 @@ struct CoffeeView: View {
 
 
 #Preview {
-    CoffeeView(coffee: DeveloperPreview().coffees[0], onTap: {
+    CoffeeCardView(coffee: DeveloperPreview().coffees[0], onTap: {
         print("Coffee tapped")
     })
 }

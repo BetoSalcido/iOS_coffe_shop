@@ -12,7 +12,7 @@ struct MainTabBarView: View {
 
     var body: some View {
         TabView {
-            HomeView(catalogService: catalogService)
+            CoffeeCatalogView(catalogService: catalogService)
                 .tabItem {
                     Image("HomeIcon")
                 }

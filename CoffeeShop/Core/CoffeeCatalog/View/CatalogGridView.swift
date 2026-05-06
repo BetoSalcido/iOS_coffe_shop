@@ -1,5 +1,5 @@
 //
-//  CoffeeGridView.swift
+//  CatalogGridView.swift
 //  CoffeeShop
 //
 //  Created by Beto Salcido on 15/10/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CoffeeGridView: View {
+struct CatalogGridView: View {
     
     let coffeeList: [Coffee]
     let onTap: (Coffee) -> Void
@@ -18,7 +18,7 @@ struct CoffeeGridView: View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(coffeeList, id:  \.self) { item in
-                    CoffeeView(coffee: item, onTap: {
+                    CoffeeCardView(coffee: item, onTap: {
                         onTap(item)
                     })
                         .frame(maxWidth: .infinity)
@@ -33,7 +33,7 @@ struct CoffeeGridView: View {
 }
 
 #Preview {
-    CoffeeGridView(coffeeList: DeveloperPreview().coffees) { _ in 
+    CatalogGridView(coffeeList: DeveloperPreview().coffees) { _ in
         print("Coffee tapped")
     }
 }

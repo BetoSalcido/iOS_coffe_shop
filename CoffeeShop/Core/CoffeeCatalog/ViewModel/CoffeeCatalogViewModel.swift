@@ -1,5 +1,5 @@
 //
-//  HomeViewModel.swift
+//  CoffeeCatalogViewModel.swift
 //  CoffeeShop
 //
 //  Created by Beto Salcido on 13/10/25.
@@ -9,7 +9,7 @@ import Foundation
 import Observation
 
 @Observable @MainActor
-final class HomeViewModel {
+final class CoffeeCatalogViewModel {
 
     var categories = [CoffeeCategory]()
     var coffees = [Coffee]()
@@ -31,7 +31,7 @@ final class HomeViewModel {
 }
 
 // MARK: - Private Methods
-private extension HomeViewModel {
+private extension CoffeeCatalogViewModel {
     
     func fetchCategories() async {
         do {
@@ -69,7 +69,7 @@ private extension HomeViewModel {
 }
 
 // MARK: - Public Methods
-extension HomeViewModel {
+extension CoffeeCatalogViewModel {
     
     func handleCategorySelectionWith(_ categoryId: String) {
         selectedCategoryId = categoryId

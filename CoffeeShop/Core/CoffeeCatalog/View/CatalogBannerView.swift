@@ -1,5 +1,5 @@
 //
-//  HomeBannerView.swift
+//  CatalogBannerView.swift
 //  CoffeeShop
 //
 //  Created by Beto Salcido on 13/10/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct HomeBannerView: View {
+struct CatalogBannerView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
@@ -30,5 +30,5 @@ struct HomeBannerView: View {
 }
 
 #Preview {
-    HomeBannerView()
+    CatalogBannerView()
 }

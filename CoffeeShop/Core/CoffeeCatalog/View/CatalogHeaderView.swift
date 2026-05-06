@@ -1,5 +1,5 @@
 //
-//  HomeHeaderView.swift
+//  CatalogHeaderView.swift
 //  CoffeeShop
 //
 //  Created by Beto Salcido on 09/10/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct HomeHeaderView: View {
+struct CatalogHeaderView: View {
     @State private var searchCoffee = ""
     
     var body: some View {
@@ -69,5 +69,5 @@ struct HomeHeaderView: View {
 }
 
 #Preview {
-    HomeHeaderView()
+    CatalogHeaderView()
 }

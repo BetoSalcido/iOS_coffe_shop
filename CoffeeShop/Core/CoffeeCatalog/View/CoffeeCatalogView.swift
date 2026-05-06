@@ -1,5 +1,5 @@
 //
-//  HomeView.swift
+//  CoffeeCatalogView.swift
 //  CoffeeShop
 //
 //  Created by Beto Salcido on 06/10/25.
@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct HomeView: View {
+struct CoffeeCatalogView: View {
     private let catalogService: any CoffeeCatalogProviding
-    @State private var viewModel: HomeViewModel
+    @State private var viewModel: CoffeeCatalogViewModel
 
     init(catalogService: any CoffeeCatalogProviding) {
         self.catalogService = catalogService
-        _viewModel = State(wrappedValue: HomeViewModel(service: catalogService))
+        _viewModel = State(wrappedValue: CoffeeCatalogViewModel(service: catalogService))
     }
 
     var body: some View {
@@ -22,13 +22,13 @@ struct HomeView: View {
             ZStack {
                 ScrollView {
                     LazyVStack(spacing: 0) {
-                        HomeHeaderView()
-                        HomeBannerView()
-                        
+                        CatalogHeaderView()
+                        CatalogBannerView()
+
 //                        ScrollView(.horizontal, showsIndicators: false) {
 //                            HStack(spacing: 16) {
 //                                ForEach(viewModel.categories, id: \.self) { category in
-//                                    CoffeeCategoryView(category: category) {
+//                                    CatalogCategoryView(category: category) {
 //                                        viewModel.handleCategorySelectionWith(category.id)
 //                                    }
 //                                }
@@ -36,8 +36,8 @@ struct HomeView: View {
 //                            .padding(.horizontal)
 //                            .padding(.top)
 //                        }
-//                        
-//                        CoffeeGridView(coffeeList: viewModel.coffees) {
+//
+//                        CatalogGridView(coffeeList: viewModel.coffees) {
 //                            viewModel.handleCoffeeSelectionWith($0)
 //                        }
                     }
@@ -48,8 +48,7 @@ struct HomeView: View {
                         CoffeeDetailView(coffee: coffee, catalogService: catalogService)
                     }
                 }
-                
-                // Only top safe area gets the color
+
                 GeometryReader { geo in
                     Color.Background.dark
                         .frame(height: geo.safeAreaInsets.top)
@@ -62,5 +61,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(catalogService: CoffeeCatalogService())
+    CoffeeCatalogView(catalogService: CoffeeCatalogService())
 }
