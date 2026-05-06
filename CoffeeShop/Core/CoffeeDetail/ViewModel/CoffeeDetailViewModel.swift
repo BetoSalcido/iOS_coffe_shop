@@ -6,11 +6,13 @@
 //
 
 import Foundation
+import Observation
 
-class CoffeeDetailViewModel: ObservableObject {
-        
-    @Published var coffeeDetail: Coffee?
-    @Published var selectedSizeId: String?
+@Observable @MainActor
+final class CoffeeDetailViewModel {
+
+    var coffeeDetail: Coffee?
+    var selectedSizeId: String?
     
     private let service: any CoffeeCatalogProviding
     private let coffee: Coffee

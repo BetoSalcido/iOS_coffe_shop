@@ -9,14 +9,15 @@ import SwiftUI
 
 struct HomeView: View {
     private let catalogService: any CoffeeCatalogProviding
-    @StateObject private var viewModel: HomeViewModel
+    @State private var viewModel: HomeViewModel
 
     init(catalogService: any CoffeeCatalogProviding) {
         self.catalogService = catalogService
-        _viewModel = StateObject(wrappedValue: HomeViewModel(service: catalogService))
+        _viewModel = State(wrappedValue: HomeViewModel(service: catalogService))
     }
 
     var body: some View {
+        @Bindable var viewModel = viewModel
         NavigationStack {
             ZStack {
                 ScrollView {
@@ -24,21 +25,21 @@ struct HomeView: View {
                         HomeHeaderView()
                         HomeBannerView()
                         
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 16) {
-                                ForEach(viewModel.categories, id: \.self) { category in
-                                    CoffeeCategoryView(category: category) {
-                                        viewModel.handleCategorySelectionWith(category.id)
-                                    }
-                                }
-                            }
-                            .padding(.horizontal)
-                            .padding(.top)
-                        }
-                        
-                        CoffeeGridView(coffeeList: viewModel.coffees) {
-                            viewModel.handleCoffeeSelectionWith($0)
-                        }
+//                        ScrollView(.horizontal, showsIndicators: false) {
+//                            HStack(spacing: 16) {
+//                                ForEach(viewModel.categories, id: \.self) { category in
+//                                    CoffeeCategoryView(category: category) {
+//                                        viewModel.handleCategorySelectionWith(category.id)
+//                                    }
+//                                }
+//                            }
+//                            .padding(.horizontal)
+//                            .padding(.top)
+//                        }
+//                        
+//                        CoffeeGridView(coffeeList: viewModel.coffees) {
+//                            viewModel.handleCoffeeSelectionWith($0)
+//                        }
                     }
                 }
                 .background(.white)

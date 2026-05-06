@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct CoffeeDetailView: View {
-    
-    @StateObject private var viewModel: CoffeeDetailViewModel
+
+    @State private var viewModel: CoffeeDetailViewModel
 
     init(coffee: Coffee, catalogService: any CoffeeCatalogProviding) {
-        _viewModel = StateObject(wrappedValue: CoffeeDetailViewModel(service: catalogService, coffee: coffee))
+        _viewModel = State(wrappedValue: CoffeeDetailViewModel(service: catalogService, coffee: coffee))
     }
-    
+
     var body: some View {
         NavigationStack {
             if let detail = viewModel.coffeeDetail {

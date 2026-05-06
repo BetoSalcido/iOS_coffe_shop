@@ -6,13 +6,15 @@
 //
 
 import Foundation
+import Observation
 
-class HomeViewModel: ObservableObject {
-    
-    @Published var categories = [CoffeeCategory]()
-    @Published var coffees = [Coffee]()
-    @Published var selectedCategoryId: String?
-    @Published var selectedCoffee: Coffee?
+@Observable @MainActor
+final class HomeViewModel {
+
+    var categories = [CoffeeCategory]()
+    var coffees = [Coffee]()
+    var selectedCategoryId: String?
+    var selectedCoffee: Coffee?
     
     private let service: any CoffeeCatalogProviding
     private var categoriesCopy = [CoffeeCategory]()
