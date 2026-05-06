@@ -14,7 +14,7 @@ struct CoffeeShopApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(catalogService: catalogService)
+            RootView(catalogService: catalogService)
                 .onChange(of: scenePhase) { oldValue, newValue in
                     switch newValue {
                     case .active:

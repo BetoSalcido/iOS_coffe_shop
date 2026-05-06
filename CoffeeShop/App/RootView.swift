@@ -1,15 +1,16 @@
 //
-//  ContentView.swift
+//  RootView.swift
 //  CoffeeShop
 //
-//  Created by Beto Salcido on 02/10/25.
+//  Created by Beto Salcido on 06/05/26.
 //
 
 import SwiftUI
 
-struct ContentView: View {
+/// Top-level shell: splash first, then the main tab interface.
+struct RootView: View {
     let catalogService: any CoffeeCatalogProviding
-    @State private var showMain: Bool = false
+    @State private var showMain = false
 
     var body: some View {
         Group {
@@ -25,5 +26,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(catalogService: CoffeeCatalogService())
+    RootView(catalogService: CoffeeCatalogService())
 }
