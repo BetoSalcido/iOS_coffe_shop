@@ -7,15 +7,17 @@
 
 import Foundation
 
-class DeveloperPreview {
-    
+/// Sample catalog data for SwiftUI previews and the mock `HomeService` implementation.
+/// Not part of the domain model layer.
+final class DeveloperPreview {
+
     var categories: [CoffeeCategory] = [
         CoffeeCategory(id: UUID().uuidString, name: "All Coffee", isActive: true),
         CoffeeCategory(id: UUID().uuidString, name: "Machiato", isActive: false),
         CoffeeCategory(id: UUID().uuidString, name: "Latte", isActive: false),
         CoffeeCategory(id: UUID().uuidString, name: "Americano", isActive: false),
     ]
-    
+
     let coffees: [Coffee] = [
         Coffee(
             id: UUID().uuidString,
@@ -86,8 +88,6 @@ class DeveloperPreview {
                 CoffeeSize(id: "2", name: "M", isActive: false),
                 CoffeeSize(id: "3", name: "L", isActive: false),
             ]
-        )
+        ),
     ]
-
-
 }
