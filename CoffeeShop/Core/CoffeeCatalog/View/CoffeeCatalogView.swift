@@ -26,7 +26,7 @@ struct CoffeeCatalogView: View {
 
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 16) {
-                                ForEach(viewModel.categories, id: \.self) { category in
+                                ForEach(viewModel.categories) { category in
                                     CatalogCategoryView(category: category) {
                                         viewModel.handleCategorySelectionWith(category.id)
                                     }
