@@ -22,24 +22,23 @@ struct CoffeeCatalogView: View {
             ZStack {
                 ScrollView {
                     LazyVStack(spacing: 0) {
-                        CatalogHeaderView()
-                        CatalogBannerView()
+                        CatalogTopSection()
 
-//                        ScrollView(.horizontal, showsIndicators: false) {
-//                            HStack(spacing: 16) {
-//                                ForEach(viewModel.categories, id: \.self) { category in
-//                                    CatalogCategoryView(category: category) {
-//                                        viewModel.handleCategorySelectionWith(category.id)
-//                                    }
-//                                }
-//                            }
-//                            .padding(.horizontal)
-//                            .padding(.top)
-//                        }
-//
-//                        CatalogGridView(coffeeList: viewModel.coffees) {
-//                            viewModel.handleCoffeeSelectionWith($0)
-//                        }
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 16) {
+                                ForEach(viewModel.categories, id: \.self) { category in
+                                    CatalogCategoryView(category: category) {
+                                        viewModel.handleCategorySelectionWith(category.id)
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
+                            .padding(.top)
+                        }
+
+                        CatalogGridView(coffeeList: viewModel.coffees) {
+                            viewModel.handleCoffeeSelectionWith($0)
+                        }
                     }
                 }
                 .background(.white)
