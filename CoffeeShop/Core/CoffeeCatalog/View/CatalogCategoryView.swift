@@ -26,8 +26,16 @@ struct CatalogCategoryView: View {
     }
 }
 
-#Preview {
-    CatalogCategoryView(category: DeveloperPreview().categories.first!) {
-        print("Category tapped")
-    }
+#Preview("Selected") {
+    CatalogCategoryView(
+        category: CoffeeCategory(id: "preview", name: "All Coffee", isActive: true),
+        onTap: {}
+    )
+}
+
+#Preview("Unselected") {
+    CatalogCategoryView(
+        category: CoffeeCategory(id: "preview-2", name: "Latte", isActive: false),
+        onTap: {}
+    )
 }
