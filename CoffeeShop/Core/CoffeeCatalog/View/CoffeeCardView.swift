@@ -13,22 +13,24 @@ struct CoffeeCardView: View {
 
     var body: some View {
         Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: CatalogVisualMetrics.CoffeeCard.contentSpacing) {
                 Image(coffee.imageURL)
                     .resizable()
                     .scaledToFill()
-                    .frame(height: 128)
+                    .frame(height: CatalogVisualMetrics.CoffeeCard.imageHeight)
                     .frame(maxWidth: .infinity)
                     .clipped()
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: CatalogVisualMetrics.CoffeeCard.imageCornerRadius, style: .continuous)
+                    )
                     .overlay(alignment: .topTrailing) {
-                        HStack(spacing: 4) {
+                        HStack(spacing: CatalogVisualMetrics.CoffeeCard.ratingStarIconSpacing) {
                             Image(systemName: "star.fill").font(.caption2)
                             Text(String(format: "%.1f", coffee.rating)).font(.caption2).bold()
                         }
-                        .padding(6)
+                        .padding(CatalogVisualMetrics.CoffeeCard.ratingBadgePadding)
                         .background(.ultraThinMaterial, in: Capsule())
-                        .padding(8)
+                        .padding(CatalogVisualMetrics.CoffeeCard.ratingBadgeOuterPadding)
                     }
 
                 Text(coffee.name)
@@ -49,16 +51,24 @@ struct CoffeeCardView: View {
                         print("Add Coffee!")
                     } label: {
                         Image("AddIcon")
-                            .frame(width: 32, height: 32)
+                            .frame(
+                                width: CatalogVisualMetrics.CoffeeCard.addButtonSide,
+                                height: CatalogVisualMetrics.CoffeeCard.addButtonSide
+                            )
                     }
                     .buttonStyle(.plain)
                 }
             }
-            .padding(12)
+            .padding(CatalogVisualMetrics.CoffeeCard.outerPadding)
             .frame(maxWidth: .infinity)
             .background(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .shadow(radius: 2, y: 1)
+            .clipShape(
+                RoundedRectangle(cornerRadius: CatalogVisualMetrics.CoffeeCard.outerCornerRadius, style: .continuous)
+            )
+            .shadow(
+                radius: CatalogVisualMetrics.CoffeeCard.shadowRadius,
+                y: CatalogVisualMetrics.CoffeeCard.shadowYOffset
+            )
         }
         .buttonStyle(.plain) // evita el efecto de botón azul por defecto
     }

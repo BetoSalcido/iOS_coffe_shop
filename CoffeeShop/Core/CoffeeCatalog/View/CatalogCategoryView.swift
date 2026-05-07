@@ -17,10 +17,10 @@ struct CatalogCategoryView: View {
             Text(category.name)
                 .font(.footnote)
                 .foregroundStyle(category.isActive ? .white : .black)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 10)
+                .padding(.horizontal, CatalogVisualMetrics.CategoryChip.horizontalPadding)
+                .padding(.vertical, CatalogVisualMetrics.CategoryChip.verticalPadding)
                 .background(category.isActive ? Color.Buttons.active : Color.Buttons.inactive)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .clipShape(RoundedRectangle(cornerRadius: CatalogVisualMetrics.CategoryChip.cornerRadius))
         }
         .buttonStyle(.plain)
     }
