@@ -9,32 +9,35 @@ import SwiftUI
 
 struct MainTabBarView: View {
     let catalogService: any CoffeeCatalogProviding
+    @State private var selectedTab: AppTab = .home
 
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             CoffeeCatalogView(catalogService: catalogService)
                 .tabItem {
                     Image("HomeIcon")
                 }
-                .tag("Home")
-            
+                .tag(AppTab.home)
+
             FavoritesView()
                 .tabItem {
                     Image("FavoritesIcon")
                 }
-                .tag("Favorites")
-            
-            CheckoutView()
-                .tabItem {
-                    Image("CheckoutIcon")
-                }
-                .tag("Checkout")
-            
+                .tag(AppTab.favorites)
+
+            NavigationStack {
+                OrderView()
+            }
+            .tabItem {
+                Image("CheckoutIcon")
+            }
+            .tag(AppTab.order)
+
             NotificationsView()
                 .tabItem {
                     Image("NotificationsIcon")
                 }
-                .tag("Notifications")
+                .tag(AppTab.notifications)
         }
     }
 }

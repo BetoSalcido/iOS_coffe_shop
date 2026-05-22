@@ -15,12 +15,15 @@ struct CoffeeDetailBodyView: View {
         VStack(alignment: .leading, spacing: 15) {
             Text("Description")
                 .font(.headline)
+                .foregroundStyle(.black)
             
             Text(coffee.longDescription)
                 .font(.footnote)
+                .foregroundStyle(.gray)
             
             Text("Size")
                 .font(.headline)
+                .foregroundStyle(.black)
             
             HStack(spacing: 12) {
                 ForEach(coffee.sizes, id:  \.self) { item in

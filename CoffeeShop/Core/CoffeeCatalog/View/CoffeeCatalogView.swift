@@ -36,16 +36,14 @@ struct CoffeeCatalogView: View {
                             .padding(.top)
                         }
 
-                        CatalogGridView(coffeeList: viewModel.coffees) {
-                            viewModel.handleCoffeeSelectionWith($0)
+                        CatalogGridView(coffeeList: viewModel.coffees) { coffee in
+                            viewModel.handleCoffeeSelectionWith(coffee)
                         }
                     }
                 }
                 .background(.white)
                 .navigationDestination(item: $viewModel.selectedCoffee) { coffee in
-                    NavigationLink(value: coffee) {
-                        CoffeeDetailView(coffee: coffee, catalogService: catalogService)
-                    }
+                    CoffeeDetailView(coffee: coffee, catalogService: catalogService)
                 }
 
                 GeometryReader { geo in
@@ -56,6 +54,7 @@ struct CoffeeCatalogView: View {
                 }
             }
         }
+        .tint(.black)
     }
 }
 

@@ -23,13 +23,14 @@ struct CoffeeDetailHeaderView: View {
                 Text(coffee.name)
                     .font(.title2)
                     .fontWeight(.bold)
+                    .foregroundStyle(.black)
                 Spacer()
             }
             
             HStack(alignment: .top) {
                 Text(coffee.description)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.gray)
                     .offset(y: 5)
                 
                 Spacer()
@@ -50,6 +51,7 @@ struct CoffeeDetailHeaderView: View {
                 
                 Text(String(format: "%.1f", coffee.rating))
                     .font(.caption2)
+                    .foregroundStyle(.black)
                     .bold()
                 
                 Spacer()

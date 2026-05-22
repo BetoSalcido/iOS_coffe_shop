@@ -36,7 +36,7 @@ extension Color {
     
     enum Buttons {
         static let active = Color("ActiveButton")
-        static let inactive = Color("Inactivebutton")
+        static let inactive = Color("InactiveButton")
     }
     
     enum Background {
