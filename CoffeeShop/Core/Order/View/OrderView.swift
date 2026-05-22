@@ -37,9 +37,19 @@ struct OrderView: View {
         ZStack(alignment: .bottom) {
             ScrollView {
                 LazyVStack(spacing: 16) {
-                    ForEach(order.lineItems) { item in
-                        OrderItemRowView(item: item)
+                    OrderSummaryHeaderView()
+
+                    VStack(spacing: 0) {
+                        ForEach(Array(order.lineItems.enumerated()), id: \.element.id) { index, item in
+                            OrderItemRowView(
+                                item: item,
+                                showsTopDivider: index > 0,
+                                onDecrement: { viewModel.handleDecrementQuantity(for: item.id) },
+                                onIncrement: { viewModel.handleIncrementQuantity(for: item.id) }
+                            )
+                        }
                     }
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                 }
                 .padding()
                 .padding(.bottom, 200)

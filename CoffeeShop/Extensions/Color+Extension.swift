@@ -46,5 +46,6 @@ extension Color {
     
     enum Text {
         static let primary = Color("PrimaryText")
+        static let secondary = Color("SecondaryText")
     }
 }

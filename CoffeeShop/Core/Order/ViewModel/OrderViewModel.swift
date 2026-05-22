@@ -40,7 +40,7 @@ private extension OrderViewModel {
     }
 }
 
-// MARK: Prublic Methods
+// MARK: Public Methods
 extension OrderViewModel {
     
     func handleretryLoad() {
@@ -54,5 +54,39 @@ extension OrderViewModel {
     func handlePlaceOrder() {
         // TODO: Submit order when backend is available
         print("[Order]: Place order tapped")
+    }
+
+    func handleIncrementQuantity(for itemId: String) {
+        updateQuantity(for: itemId, delta: 1)
+    }
+
+    func handleDecrementQuantity(for itemId: String) {
+        updateQuantity(for: itemId, delta: -1)
+    }
+}
+
+// MARK: Private Methods
+private extension OrderViewModel {
+
+    func updateQuantity(for itemId: String, delta: Int) {
+        guard let order else { return }
+
+        let updatedItems = order.lineItems.compactMap { item -> OrderLineItem? in
+            guard item.id == itemId else { return item }
+            let newQuantity = item.quantity + delta
+            guard newQuantity > 0 else { return nil }
+            return OrderLineItem(
+                id: item.id,
+                coffee: item.coffee,
+                sizeName: item.sizeName,
+                quantity: newQuantity
+            )
+        }
+
+        self.order = Order(
+            id: order.id,
+            lineItems: updatedItems,
+            deliveryFee: order.deliveryFee
+        )
     }
 }

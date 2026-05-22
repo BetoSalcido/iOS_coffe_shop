@@ -12,14 +12,14 @@ final class OrderService: OrderProviding {
         let lineItems: [OrderLineItem] = [
             OrderLineItem(
                 id: UUID().uuidString,
-                coffee: coffees[0],
-                sizeName: "M",
+                coffee: coffees[3],
+                sizeName: "Deep Foam",
                 quantity: 1
             ),
             OrderLineItem(
                 id: UUID().uuidString,
                 coffee: coffees[1],
-                sizeName: "L",
+                sizeName: "Medium",
                 quantity: 2
             ),
         ]
