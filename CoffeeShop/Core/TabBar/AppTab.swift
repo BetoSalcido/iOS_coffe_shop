@@ -9,5 +9,6 @@ enum AppTab: Hashable {
     case home
     case favorites
     case order
-    case notifications
+    case notification
+    case settings
 }

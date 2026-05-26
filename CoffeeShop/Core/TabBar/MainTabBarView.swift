@@ -33,11 +33,11 @@ struct MainTabBarView: View {
             }
             .tag(AppTab.order)
 
-            NotificationsView()
+            SettingsView()
                 .tabItem {
-                    Image("NotificationsIcon")
+                    Image("SettingsIcon")
                 }
-                .tag(AppTab.notifications)
+                .tag(AppTab.settings)
         }
     }
 }
