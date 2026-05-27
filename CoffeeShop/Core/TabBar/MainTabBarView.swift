@@ -33,11 +33,13 @@ struct MainTabBarView: View {
             }
             .tag(AppTab.order)
 
-            SettingsView()
-                .tabItem {
-                    Image("SettingsIcon")
-                }
-                .tag(AppTab.settings)
+            NavigationStack {
+                SettingsView()
+            }
+            .tabItem {
+                Image("SettingsIcon")
+            }
+            .tag(AppTab.settings)
         }
     }
 }
