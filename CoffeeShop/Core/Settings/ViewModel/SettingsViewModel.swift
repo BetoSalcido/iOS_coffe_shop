@@ -10,32 +10,33 @@ import Observation
 final class SettingsViewModel {
 
     private let service: any SettingsProviding
-    
+
     var settingItems: [SettingItem]?
+    var selectedRoute: SettingAction?
+    var showLoginSheet = false
     var isLoading = true
     var loadError: String?
 
     init(service: any SettingsProviding) {
         self.service = service
-        
+
         Task {
             await loadSettings()
         }
     }
 }
 
-// MARK:  Private Methods
+// MARK: - Private Methods
 private extension SettingsViewModel {
-    
+
     func loadSettings() async {
         do {
-            let result = try await service.getSettingItems()
-            settingItems = result
+            settingItems = try await service.getSettingItems()
             isLoading = false
             loadError = nil
         } catch {
-            isLoading = false
             settingItems = nil
+            isLoading = false
             loadError = error.localizedDescription
         }
     }
@@ -51,5 +52,13 @@ extension SettingsViewModel {
             await loadSettings()
         }
     }
-}
 
+    func handleSettingSelection(_ action: SettingAction) {
+        switch action {
+        case .login:
+            showLoginSheet = true
+        case .editProfile, .paymentMethods, .orderHistory, .deliveryAddresses, .promos, .helpCenter:
+            selectedRoute = action
+        }
+    }
+}

@@ -6,8 +6,8 @@
 import Foundation
 
 final class SettingsService: SettingsProviding {
-    
-    func getSettingItems() -> [SettingItem] {
-        return SettingItem.settings
+
+    func getSettingItems() async throws -> [SettingItem] {
+        SettingItem.settings
     }
 }
