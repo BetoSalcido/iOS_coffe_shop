@@ -24,12 +24,13 @@ final class AppServiceProvider: ServiceProvider {
         catalog: any CoffeeCatalogProviding = CoffeeCatalogService(),
         order: any OrderProviding = OrderService(),
         settings: any SettingsProviding = SettingsService(),
-        auth: any AuthProviding = AuthService()
+        sessionStore: any SessionStoring = KeychainSessionStore(),
+        auth: (any AuthProviding)? = nil
     ) {
         self.catalog = catalog
         self.order = order
         self.settings = settings
-        self.auth = auth
+        self.auth = auth ?? AuthService(sessionStore: sessionStore)
     }
 
     static let live = AppServiceProvider()

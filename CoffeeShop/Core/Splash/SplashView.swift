@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SplashView: View {
-    let onContinue: () -> Void
     
     var body: some View {
         NavigationStack {
@@ -40,20 +39,8 @@ struct SplashView: View {
                             .frame(maxWidth: .infinity)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 10)
-
-                        Button(action: {
-                            onContinue()
-                        }) {
-                            Text("Get Started")
-                                .font(.headline)
-                                .bold()
-                                .frame(maxWidth: .infinity)
-                                .padding(20)
-                                .background(Color(hex: "#C67C4E"))
-                                .foregroundStyle(.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 20))
-                        }
-                        .padding(.vertical, 20)
+                            .padding(.bottom, 30)
+                        
                     }
                     .padding(.horizontal)
                 }
@@ -65,5 +52,5 @@ struct SplashView: View {
 }
 
 #Preview {
-    SplashView(onContinue: {})
+    SplashView()
 }

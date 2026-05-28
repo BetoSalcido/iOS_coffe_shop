@@ -7,6 +7,20 @@ import Foundation
 
 final class AuthService: AuthProviding {
 
+    private let sessionStore: any SessionStoring
+
+    init(sessionStore: any SessionStoring = KeychainSessionStore()) {
+        self.sessionStore = sessionStore
+    }
+
+    var isLoggedIn: Bool {
+        sessionStore.isLoggedIn
+    }
+
+    func currentSession() -> AuthSession? {
+        sessionStore.load()
+    }
+
     func signIn(email: String, password: String) async throws -> AuthSession {
         try await Task.sleep(nanoseconds: 500_000_000)
 
@@ -18,17 +32,32 @@ final class AuthService: AuthProviding {
             throw AuthError.invalidEmail
         }
 
-        return AuthSession(id: UUID().uuidString, email: trimmedEmail)
+        let session = AuthSession(id: UUID().uuidString, email: trimmedEmail)
+        try sessionStore.save(session)
+        return session
     }
 
     func signInWithGoogle() async throws -> AuthSession {
-        try await Task.sleep(nanoseconds: 500_000_000)
-        return AuthSession(id: UUID().uuidString, email: "google.user@example.com")
+        try await signInWithSocial(email: "google.user@example.com")
     }
 
     func signInWithApple() async throws -> AuthSession {
+        try await signInWithSocial(email: "apple.user@example.com")
+    }
+
+    func signOut() throws {
+        try sessionStore.clear()
+    }
+}
+
+// MARK: - Private Methods
+private extension AuthService {
+
+    func signInWithSocial(email: String) async throws -> AuthSession {
         try await Task.sleep(nanoseconds: 500_000_000)
-        return AuthSession(id: UUID().uuidString, email: "apple.user@example.com")
+        let session = AuthSession(id: UUID().uuidString, email: email)
+        try sessionStore.save(session)
+        return session
     }
 }
 

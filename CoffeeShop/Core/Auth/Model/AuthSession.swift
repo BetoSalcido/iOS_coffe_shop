@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct AuthSession: Hashable {
+struct AuthSession: Hashable, Codable {
     let id: String
     let email: String
 }

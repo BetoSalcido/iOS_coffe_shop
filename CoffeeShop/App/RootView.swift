@@ -7,22 +7,46 @@
 
 import SwiftUI
 
-/// Top-level shell: splash first, then the main tab interface.
+/// Top-level app flow: splash → login or main (if session exists) → main after sign-in.
 struct RootView: View {
     let serviceProvider: any ServiceProvider
-    @State private var showMain = false
+
+    @State private var screen: AppScreen = .splash
+
+    private let splashDuration: Duration = .seconds(3)
 
     var body: some View {
         Group {
-            if showMain {
+            switch screen {
+            case .splash:
+                SplashView()
+                    .transition(.opacity)
+
+            case .login:
+                LoginView(
+                    service: serviceProvider.auth,
+                    onSignInSuccess: { screen = .main }
+                )
+                .transition(.opacity)
+
+            case .main:
                 MainTabBarView(serviceProvider: serviceProvider)
-            } else {
-                SplashView {
-                    showMain = true
-                }
+                    .transition(.opacity)
             }
         }
+        .animation(.easeInOut(duration: 0.45), value: screen)
+        .task(id: screen) {
+            guard screen == .splash else { return }
+            try? await Task.sleep(for: splashDuration)
+            screen = serviceProvider.auth.isLoggedIn ? .main : .login
+        }
     }
+}
+
+private enum AppScreen {
+    case splash
+    case login
+    case main
 }
 
 #Preview {

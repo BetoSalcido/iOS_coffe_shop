@@ -9,8 +9,19 @@ struct LoginView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel: LoginViewModel
 
-    init(service: any AuthProviding) {
+    private let onSignInSuccess: (() -> Void)?
+
+    /// - Parameter onSignInSuccess: When set (e.g. from `RootView`), called after login instead of `dismiss()`.
+    init(
+        service: any AuthProviding,
+        onSignInSuccess: (() -> Void)? = nil
+    ) {
         _viewModel = State(wrappedValue: LoginViewModel(service: service))
+        self.onSignInSuccess = onSignInSuccess
+    }
+
+    private var isPresentedAsSheet: Bool {
+        onSignInSuccess == nil
     }
 
     var body: some View {
@@ -29,16 +40,21 @@ struct LoginView: View {
             .background(Color.Background.appBackground)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Close") {   
-                        dismiss()
+                if isPresentedAsSheet {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Close") {
+                            dismiss()
+                        }
+                        .foregroundStyle(.black)
                     }
-                    .foregroundStyle(.black)
                 }
             }
             .blackNavigationBarStyle()
             .onChange(of: viewModel.didSignInSuccessfully) { _, didSignIn in
-                if didSignIn {
+                guard didSignIn else { return }
+                if let onSignInSuccess {
+                    onSignInSuccess()
+                } else {
                     dismiss()
                 }
             }
@@ -46,6 +62,13 @@ struct LoginView: View {
     }
 }
 
-#Preview {
+#Preview("Root flow") {
+    LoginView(
+        service: AppServiceProvider.live.auth,
+        onSignInSuccess: {}
+    )
+}
+
+#Preview("Sheet") {
     LoginView(service: AppServiceProvider.live.auth)
 }
