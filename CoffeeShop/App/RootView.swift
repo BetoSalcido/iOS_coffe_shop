@@ -9,13 +9,13 @@ import SwiftUI
 
 /// Top-level shell: splash first, then the main tab interface.
 struct RootView: View {
-    let catalogService: any CoffeeCatalogProviding
+    let serviceProvider: any ServiceProvider
     @State private var showMain = false
 
     var body: some View {
         Group {
             if showMain {
-                MainTabBarView(catalogService: catalogService)
+                MainTabBarView(serviceProvider: serviceProvider)
             } else {
                 SplashView {
                     showMain = true
@@ -26,5 +26,5 @@ struct RootView: View {
 }
 
 #Preview {
-    RootView(catalogService: CoffeeCatalogService())
+    RootView(serviceProvider: AppServiceProvider.live)
 }

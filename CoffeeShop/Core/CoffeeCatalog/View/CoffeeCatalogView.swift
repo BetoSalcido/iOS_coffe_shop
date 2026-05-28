@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct CoffeeCatalogView: View {
-    private let catalogService: any CoffeeCatalogProviding
+    private let serviceProvider: any ServiceProvider
     @State private var viewModel: CoffeeCatalogViewModel
 
-    init(catalogService: any CoffeeCatalogProviding) {
-        self.catalogService = catalogService
-        _viewModel = State(wrappedValue: CoffeeCatalogViewModel(service: catalogService))
+    init(serviceProvider: any ServiceProvider) {
+        self.serviceProvider = serviceProvider
+        _viewModel = State(wrappedValue: CoffeeCatalogViewModel(service: serviceProvider.catalog))
     }
 
     var body: some View {
@@ -43,7 +43,11 @@ struct CoffeeCatalogView: View {
                 }
                 .background(.white)
                 .navigationDestination(item: $viewModel.selectedCoffee) { coffee in
-                    CoffeeDetailView(coffee: coffee, catalogService: catalogService)
+                    CoffeeDetailView(
+                        coffee: coffee,
+                        catalogService: serviceProvider.catalog,
+                        orderService: serviceProvider.order
+                    )
                 }
 
                 GeometryReader { geo in
@@ -59,5 +63,5 @@ struct CoffeeCatalogView: View {
 }
 
 #Preview {
-    CoffeeCatalogView(catalogService: CoffeeCatalogService())
+    CoffeeCatalogView(serviceProvider: AppServiceProvider.live)
 }

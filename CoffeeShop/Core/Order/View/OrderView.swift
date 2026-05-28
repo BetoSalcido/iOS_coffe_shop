@@ -8,7 +8,7 @@ import SwiftUI
 struct OrderView: View {
     @State private var viewModel: OrderViewModel
 
-    init(service: any OrderProviding = OrderService()) {
+    init(service: any OrderProviding) {
         _viewModel = State(wrappedValue: OrderViewModel(service: service))
     }
 
@@ -65,6 +65,6 @@ struct OrderView: View {
 
 #Preview {
     NavigationStack {
-        OrderView()
+        OrderView(service: AppServiceProvider.live.order)
     }
 }

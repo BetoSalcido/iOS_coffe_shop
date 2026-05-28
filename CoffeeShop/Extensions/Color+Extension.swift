@@ -37,6 +37,7 @@ extension Color {
     enum Buttons {
         static let active = Color("ActiveButton")
         static let inactive = Color("InactiveButton")
+        static let primaryBackground = Color("PrimaryButtonBackground")
     }
     
     enum Background {
@@ -50,6 +51,7 @@ extension Color {
         static let primary = Color("PrimaryText")
         static let secondary = Color("SecondaryText")
         static let title = Color("TitleText")
+        static let primaryButton = Color("PrimaryButtonText")
     }
     
     enum Tag {

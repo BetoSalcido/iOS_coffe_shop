@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct MainTabBarView: View {
-    let catalogService: any CoffeeCatalogProviding
+    let serviceProvider: any ServiceProvider
     @State private var selectedTab: AppTab = .home
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            CoffeeCatalogView(catalogService: catalogService)
+            CoffeeCatalogView(serviceProvider: serviceProvider)
                 .tabItem {
                     Image("HomeIcon")
                 }
@@ -26,7 +26,7 @@ struct MainTabBarView: View {
                 .tag(AppTab.favorites)
 
             NavigationStack {
-                OrderView()
+                OrderView(service: serviceProvider.order)
             }
             .tabItem {
                 Image("CheckoutIcon")
@@ -34,7 +34,7 @@ struct MainTabBarView: View {
             .tag(AppTab.order)
 
             NavigationStack {
-                SettingsView()
+                SettingsView(serviceProvider: serviceProvider)
             }
             .tabItem {
                 Image("SettingsIcon")
@@ -45,5 +45,5 @@ struct MainTabBarView: View {
 }
 
 #Preview {
-    MainTabBarView(catalogService: CoffeeCatalogService())
+    MainTabBarView(serviceProvider: AppServiceProvider.live)
 }

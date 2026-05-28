@@ -12,7 +12,14 @@ struct CoffeeDetailView: View {
     @State private var viewModel: CoffeeDetailViewModel
     @State private var showOrder = false
 
-    init(coffee: Coffee, catalogService: any CoffeeCatalogProviding) {
+    private let orderService: any OrderProviding
+
+    init(
+        coffee: Coffee,
+        catalogService: any CoffeeCatalogProviding,
+        orderService: any OrderProviding
+    ) {
+        self.orderService = orderService
         _viewModel = State(wrappedValue: CoffeeDetailViewModel(service: catalogService, coffee: coffee))
     }
 
@@ -35,7 +42,7 @@ struct CoffeeDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .blackNavigationBarStyle()
         .navigationDestination(isPresented: $showOrder) {
-            OrderView()
+            OrderView(service: orderService)
         }
     }
 
@@ -61,7 +68,8 @@ struct CoffeeDetailView: View {
     NavigationStack {
         CoffeeDetailView(
             coffee: DeveloperPreview().coffees[0],
-            catalogService: CoffeeCatalogService()
+            catalogService: AppServiceProvider.live.catalog,
+            orderService: AppServiceProvider.live.order
         )
     }
 }

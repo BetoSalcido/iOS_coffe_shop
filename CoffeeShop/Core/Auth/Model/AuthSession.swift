@@ -5,5 +5,7 @@
 
 import Foundation
 
-struct AuthSession {
+struct AuthSession: Hashable {
+    let id: String
+    let email: String
 }

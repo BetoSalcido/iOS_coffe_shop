@@ -6,10 +6,12 @@
 import SwiftUI
 
 struct SettingsView: View {
+    private let serviceProvider: any ServiceProvider
     @State private var viewModel: SettingsViewModel
 
-    init(service: any SettingsProviding = SettingsService()) {
-        _viewModel = State(wrappedValue: SettingsViewModel(service: service))
+    init(serviceProvider: any ServiceProvider) {
+        self.serviceProvider = serviceProvider
+        _viewModel = State(wrappedValue: SettingsViewModel(service: serviceProvider.settings))
     }
 
     var body: some View {
@@ -34,7 +36,7 @@ struct SettingsView: View {
             destinationView(for: action)
         }
         .sheet(isPresented: $viewModel.showLoginSheet) {
-            LoginView()
+            LoginView(service: serviceProvider.auth)
         }
         .navigationBarTitleDisplayMode(.inline)
         .blackNavigationBarStyle()
@@ -86,6 +88,6 @@ struct SettingsView: View {
 
 #Preview {
     NavigationStack {
-        SettingsView()
+        SettingsView(serviceProvider: AppServiceProvider.live)
     }
 }

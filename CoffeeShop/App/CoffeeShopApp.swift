@@ -9,12 +9,12 @@ import SwiftUI
 
 @main
 struct CoffeeShopApp: App {
-    @Environment(\.scenePhase) private var scenePhase // Para estar altanto de los cambios del scene
-    private let catalogService: any CoffeeCatalogProviding = CoffeeCatalogService()
+    @Environment(\.scenePhase) private var scenePhase
+    private let serviceProvider: any ServiceProvider = AppServiceProvider.live
 
     var body: some Scene {
         WindowGroup {
-            RootView(catalogService: catalogService)
+            RootView(serviceProvider: serviceProvider)
                 .onChange(of: scenePhase) { oldValue, newValue in
                     switch newValue {
                     case .active:
@@ -22,7 +22,7 @@ struct CoffeeShopApp: App {
                     case .background:
                         print("App in background!")
                     case .inactive:
-                        print("App inactive!") // multitarea o inativo
+                        print("App inactive!")
                     @unknown default:
                         print("error...")
                     }
