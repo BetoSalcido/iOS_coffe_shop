@@ -11,7 +11,7 @@ struct SettingsView: View {
 
     init(serviceProvider: any ServiceProvider) {
         self.serviceProvider = serviceProvider
-        _viewModel = State(wrappedValue: SettingsViewModel(service: serviceProvider.settings))
+        _viewModel = State(wrappedValue: SettingsViewModel(service: serviceProvider))
     }
 
     var body: some View {
@@ -35,7 +35,9 @@ struct SettingsView: View {
         .navigationDestination(item: $viewModel.selectedRoute) { action in
             destinationView(for: action)
         }
-        .sheet(isPresented: $viewModel.showLoginSheet) {
+        .sheet(isPresented: $viewModel.showLoginSheet, onDismiss: {
+            viewModel.handleLoginSheetDismissed()
+        }) {
             LoginView(service: serviceProvider.auth)
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -56,6 +58,11 @@ struct SettingsView: View {
                         SettingsRowView(item: item) {
                             viewModel.handleSettingSelection(item.id)
                         }
+                    }
+                    
+                    if viewModel.isLoggedIn {
+                        logoutSection()
+                            .padding(.top, 16)
                     }
                 }
             }
@@ -81,7 +88,29 @@ struct SettingsView: View {
         case .helpCenter:
             HelpCenterView()
         case .login:
-            EmptyView()
+            LoginView(service: serviceProvider.auth)
+        }
+    }
+    
+    private func logoutSection() -> some View {
+        Button {
+            viewModel.handleLogout()
+        } label: {
+            HStack(spacing: 10) {
+                Image("LogoutIcon")
+                    .resizable()
+                    .frame(width: 18, height: 18)
+                
+                Text("Logout")
+                    .font(.headline)
+                    .foregroundStyle(Color.Text.title)
+            }
+        }
+        .padding(.horizontal, 16)
+        .frame(maxWidth: .infinity, minHeight: 60)
+        .overlay {
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .stroke(Color(hex: "#EDE5DC"), lineWidth: 1)
         }
     }
 }

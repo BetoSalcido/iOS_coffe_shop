@@ -37,6 +37,35 @@ final class AuthService: AuthProviding {
         return session
     }
 
+    func signUp(
+        name: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    ) async throws -> AuthSession {
+        try await Task.sleep(nanoseconds: 500_000_000)
+
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !trimmedName.isEmpty else {
+            throw AuthError.missingName
+        }
+        guard !trimmedEmail.isEmpty, !password.isEmpty else {
+            throw AuthError.invalidCredentials
+        }
+        guard trimmedEmail.contains("@") else {
+            throw AuthError.invalidEmail
+        }
+        guard password == confirmPassword else {
+            throw AuthError.passwordMismatch
+        }
+
+        let session = AuthSession(id: UUID().uuidString, email: trimmedEmail)
+        try sessionStore.save(session)
+        return session
+    }
+
     func signInWithGoogle() async throws -> AuthSession {
         try await signInWithSocial(email: "google.user@example.com")
     }
@@ -64,6 +93,8 @@ private extension AuthService {
 enum AuthError: LocalizedError {
     case invalidCredentials
     case invalidEmail
+    case missingName
+    case passwordMismatch
 
     var errorDescription: String? {
         switch self {
@@ -71,6 +102,10 @@ enum AuthError: LocalizedError {
             return "Please enter your email and password."
         case .invalidEmail:
             return "Please enter a valid email address."
+        case .missingName:
+            return "Please enter your name."
+        case .passwordMismatch:
+            return "Passwords do not match."
         }
     }
 }

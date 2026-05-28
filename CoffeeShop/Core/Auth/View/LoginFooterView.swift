@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct LoginFooterView: View {
+    var onSignUpTapped: () -> Void
+
     var body: some View {
         HStack {
             Text("Dont' have an acount?")
                 .font(.subheadline)
             
-            Button {
-                // Nothing to do yet
-            } label: {
+            Button(action: onSignUpTapped) {
                 Text("Sign up")
                     .font(.subheadline)
                     .foregroundStyle(Color.Text.primary)
@@ -26,5 +26,5 @@ struct LoginFooterView: View {
 }
 
 #Preview {
-    LoginFooterView()
+    LoginFooterView(onSignUpTapped: {})
 }

@@ -8,14 +8,18 @@ import SwiftUI
 struct LoginView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel: LoginViewModel
+    @State private var showSignUp = false
 
+    private let service: any AuthProviding
     private let onSignInSuccess: (() -> Void)?
 
-    /// - Parameter onSignInSuccess: When set (e.g. from `RootView`), called after login instead of `dismiss()`.
+    /// - Parameter onSignInSuccess: When set (e.g. `RootView`), called after sign-in and hides Close.
+    ///   When `nil` (e.g. sheet from Settings), shows Close and `dismiss()` on success.
     init(
         service: any AuthProviding,
         onSignInSuccess: (() -> Void)? = nil
     ) {
+        self.service = service
         _viewModel = State(wrappedValue: LoginViewModel(service: service))
         self.onSignInSuccess = onSignInSuccess
     }
@@ -32,7 +36,12 @@ struct LoginView: View {
                 VStack(spacing: 24) {
                     LoginHeaderView()
                     LoginBodyView(viewModel: viewModel)
-                    LoginFooterView()
+                    if !isPresentedAsSheet {
+                        LoginFooterView {
+                            showSignUp = true
+                        }
+                    }
+
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 16)
@@ -50,6 +59,9 @@ struct LoginView: View {
                 }
             }
             .blackNavigationBarStyle()
+            .navigationDestination(isPresented: $showSignUp) {
+                SignUpView(service: service, onSignUpSuccess: onSignInSuccess)
+            }
             .onChange(of: viewModel.didSignInSuccessfully) { _, didSignIn in
                 guard didSignIn else { return }
                 if let onSignInSuccess {

@@ -9,7 +9,9 @@ import Observation
 @Observable @MainActor
 final class SettingsViewModel {
 
-    private let service: any SettingsProviding
+    private let service: any ServiceProvider
+    private let authProvider: any AuthProviding
+    private let settingsProvider: any SettingsProviding
 
     var settingItems: [SettingItem]?
     var selectedRoute: SettingAction?
@@ -17,12 +19,18 @@ final class SettingsViewModel {
     var isLoading = true
     var loadError: String?
 
-    init(service: any SettingsProviding) {
+    init(service: any ServiceProvider) {
         self.service = service
+        self.settingsProvider = service.settings
+        self.authProvider = service.auth
 
         Task {
             await loadSettings()
         }
+    }
+    
+    var isLoggedIn: Bool {
+        authProvider.isLoggedIn
     }
 }
 
@@ -31,7 +39,10 @@ private extension SettingsViewModel {
 
     func loadSettings() async {
         do {
-            settingItems = try await service.getSettingItems()
+            let result = try await settingsProvider.getSettingItems()
+            settingItems = result.filter { item in
+                !(isLoggedIn && item.id == .login)
+            }
             isLoading = false
             loadError = nil
         } catch {
@@ -48,6 +59,19 @@ extension SettingsViewModel {
     func handleRetryLoad() {
         loadError = nil
         isLoading = true
+        Task {
+            await loadSettings()
+        }
+    }
+
+    func handleLoginSheetDismissed() {
+        Task {
+            await loadSettings()
+        }
+    }
+    
+    func handleLogout() {
+        try? authProvider.signOut()
         Task {
             await loadSettings()
         }

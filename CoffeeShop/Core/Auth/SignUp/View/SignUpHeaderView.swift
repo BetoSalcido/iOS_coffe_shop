@@ -1,26 +1,25 @@
 //
-//  LoginHeaderView.swift
+//  SignUpHeaderView.swift
 //  CoffeeShop
-//
-//  Created by Beto Salcido on 27/05/26.
 //
 
 import SwiftUI
 
-struct LoginHeaderView: View {
+struct SignUpHeaderView: View {
     var body: some View {
         VStack {
-            Image("LogoIcon")
+            Image("CreateAccountBackground")
                 .resizable()
                 .scaledToFill()
-                .frame(width: 80, height: 50)
-            
-            Text("Welcome back!")
+                .frame(maxWidth: .infinity, maxHeight: 192)
+                .padding(.horizontal)
+
+            Text("Create your account")
                 .font(.title)
                 .fontWeight(.bold)
                 .foregroundStyle(Color.Text.title)
-            
-            Text("The perfect brew is just a login away.")
+
+            Text("Join us and enjoy your perfect brew.")
                 .font(.subheadline)
                 .foregroundStyle(Color.Text.title)
         }
@@ -28,5 +27,5 @@ struct LoginHeaderView: View {
 }
 
 #Preview {
-    LoginHeaderView()
+    SignUpHeaderView()
 }
