@@ -34,4 +34,15 @@ final class AppServiceProvider: ServiceProvider {
     }
 
     static let live = AppServiceProvider()
+
+    /// Use after setting `NetworkingService.APIConfig` and creating Supabase tables.
+    static func liveWithSupabase(
+        network: any NetworkProviding = URLSessionNetworkClient(),
+        sessionStore: any SessionStoring = KeychainSessionStore()
+    ) -> AppServiceProvider {
+        AppServiceProvider(
+            catalog: RemoteCoffeeCatalogService(network: network),
+            sessionStore: sessionStore
+        )
+    }
 }
