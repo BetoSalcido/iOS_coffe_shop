@@ -17,6 +17,11 @@ struct AuthSessionDTO: Decodable {
 struct AuthUserDTO: Decodable {
     let id: String
     let email: String?
+    let userMetadata: AuthUserMetadataDTO?
+}
+
+struct AuthUserMetadataDTO: Decodable {
+    let fullName: String?
 }
 
 extension AuthSessionDTO {
@@ -29,6 +34,7 @@ extension AuthSessionDTO {
         return AuthSession(
             id: user?.id ?? UUID().uuidString,
             email: user?.email ?? "",
+            fullName: user?.userMetadata?.fullName,
             accessToken: accessToken,
             refreshToken: refreshToken
         )

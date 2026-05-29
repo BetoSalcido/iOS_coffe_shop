@@ -32,6 +32,27 @@ final class SettingsViewModel {
     var isLoggedIn: Bool {
         authProvider.isLoggedIn
     }
+
+    var isUserPro: Bool = false
+
+    /// Session loaded from Keychain via `AuthProviding` (not read in the View).
+    var currentSession: AuthSession? {
+        authProvider.currentSession()
+    }
+
+    var displayName: String {
+        guard isLoggedIn else { return "User" }
+        if let fullName = currentSession?.fullName,
+           !fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return fullName
+        }
+        if let email = currentSession?.email,
+           let localPart = email.split(separator: "@").first,
+           !localPart.isEmpty {
+            return String(localPart).capitalized
+        }
+        return "User"
+    }
 }
 
 // MARK: - Private Methods

@@ -47,7 +47,7 @@ struct SettingsView: View {
     private func settingsContent(_ items: [SettingItem]) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                SettingsHeaderView(isUserPro: true)
+                SettingsHeaderView(viewModel: viewModel)
 
                 Text("Account Settings")
                     .font(.headline)

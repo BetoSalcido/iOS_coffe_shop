@@ -6,20 +6,21 @@
 import SwiftUI
 
 struct SettingsHeaderView: View {
-    
-    let isUserPro: Bool
-    
+
+    @Bindable var viewModel: SettingsViewModel
+
     var body: some View {
         VStack {
-            Image(isUserPro ? "UserProIcon" : "UserIcon")
+            Image(viewModel.isUserPro ? "UserProIcon" : "UserIcon")
                 .resizable()
                 .frame(width: 96, height: 96)
             
-            Text("Alex Rodriguez")
+            Text(viewModel.displayName)
                 .font(.headline)
                 .foregroundStyle(.black)
-            
-            if isUserPro {
+
+
+            if viewModel.isUserPro {
                 HStack {
                     Image("ProIcon")
                         .resizable()
@@ -44,11 +45,13 @@ struct SettingsHeaderView: View {
 }
 
 #Preview("Pro") {
-    SettingsHeaderView(isUserPro: true)
+    let vm = SettingsViewModel(service: AppServiceProvider.live)
+    SettingsHeaderView(viewModel: vm)
         .padding()
+        .onAppear { vm.isUserPro = true }
 }
 
 #Preview("Free") {
-    SettingsHeaderView(isUserPro: false)
+    SettingsHeaderView(viewModel: SettingsViewModel(service: AppServiceProvider.live))
         .padding()
 }

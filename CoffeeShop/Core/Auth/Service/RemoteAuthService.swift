@@ -34,7 +34,8 @@ final class RemoteAuthService: AuthProviding {
         }
 
         return try await authenticate(
-            router: .signIn(email: trimmedEmail, password: password)
+            router: .signIn(email: trimmedEmail, password: password),
+            fullNameFallback: nil
         )
     }
 
@@ -62,7 +63,8 @@ final class RemoteAuthService: AuthProviding {
                 email: trimmedEmail,
                 password: password,
                 fullName: trimmedName
-            )
+            ),
+            fullNameFallback: trimmedName
         )
     }
 
@@ -82,10 +84,19 @@ final class RemoteAuthService: AuthProviding {
 // MARK: - Private Methods
 private extension RemoteAuthService {
 
-    func authenticate(router: AuthRouter) async throws -> AuthSession {
+    func authenticate(router: AuthRouter, fullNameFallback: String?) async throws -> AuthSession {
         do {
             let dto: AuthSessionDTO = try await network.request(AuthSessionDTO.self, router: router)
-            let session = try dto.toDomain()
+            var session = try dto.toDomain()
+            if session.fullName == nil, let fullNameFallback {
+                session = AuthSession(
+                    id: session.id,
+                    email: session.email,
+                    fullName: fullNameFallback,
+                    accessToken: session.accessToken,
+                    refreshToken: session.refreshToken
+                )
+            }
             try sessionStore.save(session)
             return session
         } catch let error as AuthError {

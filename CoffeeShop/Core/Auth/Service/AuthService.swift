@@ -35,6 +35,7 @@ final class AuthService: AuthProviding {
         let session = AuthSession(
             id: UUID().uuidString,
             email: trimmedEmail,
+            fullName: nil,
             accessToken: "mock-local",
             refreshToken: nil
         )
@@ -69,6 +70,7 @@ final class AuthService: AuthProviding {
         let session = AuthSession(
             id: UUID().uuidString,
             email: trimmedEmail,
+            fullName: trimmedName,
             accessToken: "mock-local",
             refreshToken: nil
         )
@@ -97,6 +99,7 @@ private extension AuthService {
         let session = AuthSession(
             id: UUID().uuidString,
             email: email,
+            fullName: nil,
             accessToken: "mock-local",
             refreshToken: nil
         )
