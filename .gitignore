@@ -50,6 +50,10 @@ playground.xcworkspace
 
 Carthage/Build/
 
+# Supabase / API secrets
+CoffeeShop/Secrets.plist
+Config/Secrets.xcconfig
+
 # fastlane
 #
 # It is recommended to not store the screenshots in the git repo.

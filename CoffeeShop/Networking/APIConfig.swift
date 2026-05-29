@@ -7,14 +7,11 @@ import Foundation
 
 extension NetworkingService {
 
-    /// Supabase and REST configuration.
-    /// Replace placeholders when the project is created in the Supabase dashboard.
+    /// Supabase configuration from `Secrets.plist` in the app bundle (see `Secrets.plist.example`).
     enum APIConfig {
-        /// Project URL, e.g. `https://abcdefgh.supabase.co`
-        static let supabaseURL = "https://YOUR_PROJECT_REF.supabase.co"
 
-        /// `anon` public key from Project Settings → API.
-        static let supabaseAnonKey = "YOUR_SUPABASE_ANON_KEY"
+        static let supabaseURL = secretString(for: "SUPABASE_URL")
+        static let supabaseAnonKey = secretString(for: "SUPABASE_ANON_KEY")
 
         static var authBaseURL: String {
             "\(supabaseURL)/auth/v1"
@@ -31,5 +28,26 @@ extension NetworkingService {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.setValue("application/json", forHTTPHeaderField: "Accept")
         }
+
+        private static func secretString(for key: String) -> String {
+            guard let value = secrets[key] as? String else { return "" }
+            return value.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+
+        private static let secrets: [String: Any] = {
+            guard let url = Bundle.main.url(forResource: "Secrets", withExtension: "plist"),
+                  let data = try? Data(contentsOf: url),
+                  let plist = try? PropertyListSerialization.propertyList(
+                    from: data,
+                    format: nil
+                  ) as? [String: Any]
+            else {
+                #if DEBUG
+                print("[APIConfig] Missing Secrets.plist. Copy CoffeeShop/Secrets.plist.example → Secrets.plist and add your Supabase URL/key.")
+                #endif
+                return [:]
+            }
+            return plist
+        }()
     }
 }

@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct CoffeeShopApp: App {
     @Environment(\.scenePhase) private var scenePhase
-    private let serviceProvider: any ServiceProvider = AppServiceProvider.live
+    private let serviceProvider: any ServiceProvider = AppServiceProvider.liveWithSupabase()
 
     var body: some Scene {
         WindowGroup {

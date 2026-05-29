@@ -5,7 +5,7 @@
 
 import Foundation
 
-/// API model aligned with Supabase `coffees` table (snake_case JSON).
+/// API model aligned with Supabase `coffees` table (decoded via `.convertFromSnakeCase`).
 struct CoffeeDTO: Decodable {
     let id: String
     let name: String
@@ -13,7 +13,7 @@ struct CoffeeDTO: Decodable {
     let longDescription: String
     let rating: Double
     let price: Double
-    let imageURL: String
+    let imageUrl: String
     let sizes: [CoffeeSizeDTO]
 }
 
@@ -40,7 +40,7 @@ extension CoffeeDTO {
             longDescription: longDescription,
             rating: rating,
             price: price,
-            imageURL: imageURL,
+            imageURL: imageUrl,
             sizes: sizes.map { $0.toDomain() }
         )
     }
