@@ -31,13 +31,30 @@ SQL Editor → New query → paste each file in order → **Run**.
 
 After a test sign-up in Auth → Users, you should see a matching row in `profiles`.
 
-## 4. Connect iOS (recommended sequence)
+## 4. Connect iOS
 
-1. **Auth** — `RemoteAuthService` + JWT in Keychain + sign-up with `full_name` metadata
-2. **Catalog** — `APIConfig` + `liveWithSupabase()`
-3. **Orders** — `OrderService` → `orders` / `order_items`
+1. Copy `CoffeeShop/Secrets.plist.example` → `CoffeeShop/Secrets.plist` and add URL + publishable key.
+2. Use `AppServiceProvider.liveWithSupabase()` in `CoffeeShopApp` (catalog + `RemoteAuthService` + Keychain).
+3. In Supabase **Authentication → Providers → Email**, disable “Confirm email” for local testing if sign-up should log in immediately.
 
-Catalog can be wired in parallel (public read, no login required). Orders **require** auth first.
+## Email confirmation links (`localhost:3000`)
+
+If the confirmation email opens `http://localhost:3000` and fails, fix **Authentication → URL Configuration**:
+
+| Field | Recommended value (replace with your project ref) |
+|-------|---------------------------------------------------|
+| **Site URL** | `https://YOUR_PROJECT_REF.supabase.co` |
+| **Redirect URLs** | `https://YOUR_PROJECT_REF.supabase.co/**` |
+
+Remove `http://localhost:3000` from Site URL and Redirect URLs unless you run a local web app.
+
+**Note:** The account may still be confirmed even if the browser shows an error after the redirect. Try **Login** in the app with the same email/password.
+
+For iOS-only development, disabling **Confirm email** (step 3 above) avoids this flow entirely.
+
+## 5. Orders (next)
+
+Run `002_orders.sql` and wire `OrderService` to PostgREST.
 
 ## RLS summary
 
@@ -49,8 +66,9 @@ Catalog can be wired in parallel (public read, no login required). Orders **requ
 | `orders` | — | own rows only |
 | `order_items` | — | own orders only |
 
-## Next steps
+## Verify auth
 
-- Step 2: `RemoteAuthService` (signUp sends `full_name` for profile trigger)
-- Step 3: Catalog via `RemoteCoffeeCatalogService`
-- Step 4: Orders API
+After sign-up in the app:
+
+- **Authentication → Users** — new user
+- **Table Editor → profiles** — row with `full_name` from sign-up metadata

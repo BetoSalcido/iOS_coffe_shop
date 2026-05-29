@@ -68,6 +68,14 @@ final class KeychainSessionStore: SessionStoring {
     }
 }
 
+// MARK: - AccessTokenProviding
+extension KeychainSessionStore: AccessTokenProviding {
+
+    var accessToken: String? {
+        load()?.accessToken
+    }
+}
+
 private extension KeychainSessionStore {
 
     func deleteIfNeeded() throws {

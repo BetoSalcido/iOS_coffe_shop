@@ -5,9 +5,9 @@
 
 import Foundation
 
-/// Supabase Auth token response (`POST /auth/v1/token` or signup).
+/// Supabase Auth token response (`POST /auth/v1/token` or `/signup`).
 struct AuthSessionDTO: Decodable {
-    let accessToken: String
+    let accessToken: String?
     let refreshToken: String?
     let expiresIn: Int?
     let tokenType: String?
@@ -21,10 +21,16 @@ struct AuthUserDTO: Decodable {
 
 extension AuthSessionDTO {
 
-    func toDomain() -> AuthSession {
-        AuthSession(
+    func toDomain() throws -> AuthSession {
+        guard let accessToken, !accessToken.isEmpty else {
+            throw AuthError.emailConfirmationRequired
+        }
+
+        return AuthSession(
             id: user?.id ?? UUID().uuidString,
-            email: user?.email ?? ""
+            email: user?.email ?? "",
+            accessToken: accessToken,
+            refreshToken: refreshToken
         )
     }
 }

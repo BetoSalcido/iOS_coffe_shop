@@ -5,10 +5,10 @@
 
 import Foundation
 
-/// Supabase Auth routes (`auth/v1`). Wire when replacing mock `AuthService`.
+/// Supabase Auth routes (`auth/v1`).
 enum AuthRouter: URLRequestConvertible {
     case signIn(email: String, password: String)
-    case signUp(email: String, password: String)
+    case signUp(email: String, password: String, fullName: String)
 
     private var path: String {
         switch self {
@@ -27,14 +27,22 @@ enum AuthRouter: URLRequestConvertible {
     }
 
     private var body: Data? {
-        let payload: [String: String]
         switch self {
         case .signIn(let email, let password):
-            payload = ["email": email, "password": password]
-        case .signUp(let email, let password):
-            payload = ["email": email, "password": password]
+            let payload: [String: String] = [
+                "email": email,
+                "password": password
+            ]
+            return try? JSONSerialization.data(withJSONObject: payload)
+
+        case .signUp(let email, let password, let fullName):
+            let payload: [String: Any] = [
+                "email": email,
+                "password": password,
+                "data": ["full_name": fullName]
+            ]
+            return try? JSONSerialization.data(withJSONObject: payload)
         }
-        return try? JSONSerialization.data(withJSONObject: payload)
     }
 
     func makeURLRequest() throws -> URLRequest {

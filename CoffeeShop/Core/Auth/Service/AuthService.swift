@@ -32,7 +32,12 @@ final class AuthService: AuthProviding {
             throw AuthError.invalidEmail
         }
 
-        let session = AuthSession(id: UUID().uuidString, email: trimmedEmail)
+        let session = AuthSession(
+            id: UUID().uuidString,
+            email: trimmedEmail,
+            accessToken: "mock-local",
+            refreshToken: nil
+        )
         try sessionStore.save(session)
         return session
     }
@@ -61,7 +66,12 @@ final class AuthService: AuthProviding {
             throw AuthError.passwordMismatch
         }
 
-        let session = AuthSession(id: UUID().uuidString, email: trimmedEmail)
+        let session = AuthSession(
+            id: UUID().uuidString,
+            email: trimmedEmail,
+            accessToken: "mock-local",
+            refreshToken: nil
+        )
         try sessionStore.save(session)
         return session
     }
@@ -84,28 +94,13 @@ private extension AuthService {
 
     func signInWithSocial(email: String) async throws -> AuthSession {
         try await Task.sleep(nanoseconds: 500_000_000)
-        let session = AuthSession(id: UUID().uuidString, email: email)
+        let session = AuthSession(
+            id: UUID().uuidString,
+            email: email,
+            accessToken: "mock-local",
+            refreshToken: nil
+        )
         try sessionStore.save(session)
         return session
-    }
-}
-
-enum AuthError: LocalizedError {
-    case invalidCredentials
-    case invalidEmail
-    case missingName
-    case passwordMismatch
-
-    var errorDescription: String? {
-        switch self {
-        case .invalidCredentials:
-            return "Please enter your email and password."
-        case .invalidEmail:
-            return "Please enter a valid email address."
-        case .missingName:
-            return "Please enter your name."
-        case .passwordMismatch:
-            return "Passwords do not match."
-        }
     }
 }

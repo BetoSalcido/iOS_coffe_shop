@@ -35,14 +35,19 @@ final class AppServiceProvider: ServiceProvider {
 
     static let live = AppServiceProvider()
 
-    /// Use after setting `NetworkingService.APIConfig` and creating Supabase tables.
+    /// Supabase-backed catalog and auth. Requires `CoffeeShop/Secrets.plist`.
     static func liveWithSupabase(
-        network: any NetworkProviding = URLSessionNetworkClient(),
-        sessionStore: any SessionStoring = KeychainSessionStore()
+        sessionStore: KeychainSessionStore = KeychainSessionStore()
     ) -> AppServiceProvider {
-        AppServiceProvider(
-            catalog: RemoteCoffeeCatalogService(network: network),
-            sessionStore: sessionStore
+        let authNetwork = URLSessionNetworkClient()
+        let apiNetwork = URLSessionNetworkClient(accessTokenProvider: sessionStore)
+        let auth = RemoteAuthService(network: authNetwork, sessionStore: sessionStore)
+        let catalog = RemoteCoffeeCatalogService(network: apiNetwork)
+
+        return AppServiceProvider(
+            catalog: catalog,
+            sessionStore: sessionStore,
+            auth: auth
         )
     }
 }
