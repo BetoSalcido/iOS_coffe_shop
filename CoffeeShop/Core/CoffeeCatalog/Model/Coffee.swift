@@ -9,6 +9,7 @@ import Foundation
 
 struct Coffee: Identifiable, Codable, Hashable {
     let id: String
+    let categoryId: String
     let name: String
     let description: String
     let longDescription: String

@@ -13,8 +13,12 @@ final class CoffeeCatalogService: CoffeeCatalogProviding {
         return DeveloperPreview().categories
     }
 
-    func fetchCoffees() async throws -> [Coffee] {
-        return DeveloperPreview().coffees
+    func fetchCoffees(forCategory category: CoffeeCategory) async throws -> [Coffee] {
+        let allCoffees = DeveloperPreview().coffees
+        guard !category.isAllFilter else {
+            return allCoffees
+        }
+        return allCoffees.filter { $0.categoryId == category.id }
     }
 
     func fetchCoffeeDetail(_ coffeeId: String) async throws -> Coffee {

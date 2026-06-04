@@ -15,50 +15,50 @@ final class CoffeeCatalogViewModel {
     var coffees = [Coffee]()
     var selectedCategoryId: String?
     var selectedCoffee: Coffee?
-    
+    var isLoadingCoffees = false
+
     private let service: any CoffeeCatalogProviding
-    private var categoriesCopy = [CoffeeCategory]()
-    private var coffeesCopy = [Coffee]()
-    
+
     init(service: any CoffeeCatalogProviding) {
         self.service = service
-        
+
         Task {
             await fetchCategories()
-            await fetchCoffees()
         }
     }
 }
 
 // MARK: - Private Methods
 private extension CoffeeCatalogViewModel {
-    
+
     func fetchCategories() async {
         do {
             let categories = try await service.fetchCoffeeCategories()
             self.categories = categories
-            self.categoriesCopy = categories
-            
-            // Set first category as selected by default
+
             if let firstCategory = categories.first {
                 selectedCategoryId = firstCategory.id
                 updateCategoriesSelection()
+                await fetchCoffees(for: firstCategory)
             }
         } catch {
             print("[DEBUG]: Error fetching categories: \(error)")
         }
     }
-    
-    func fetchCoffees() async {
+
+    func fetchCoffees(for category: CoffeeCategory) async {
+        isLoadingCoffees = true
+
         do {
-            let coffees = try await service.fetchCoffees()
-            self.coffees = coffees
-            self.coffeesCopy = coffees
+            coffees = try await service.fetchCoffees(forCategory: category)
+            isLoadingCoffees = false
         } catch {
+            coffees = []
+            isLoadingCoffees = false
             print("[DEBUG]: Error fetching coffees: \(error)")
         }
     }
-    
+
     func updateCategoriesSelection() {
         categories = categories.map { category in
             var updatedCategory = category
@@ -70,16 +70,25 @@ private extension CoffeeCatalogViewModel {
 
 // MARK: - Public Methods
 extension CoffeeCatalogViewModel {
-    
+
     func handleCategorySelectionWith(_ categoryId: String) {
+        guard categoryId != selectedCategoryId,
+              let category = categories.first(where: { $0.id == categoryId }) else {
+            return
+        }
+
         selectedCategoryId = categoryId
         updateCategoriesSelection()
+
+        Task {
+            await fetchCoffees(for: category)
+        }
     }
-    
+
     func getSelectedCategory() -> CoffeeCategory? {
-        return categories.first { $0.id == selectedCategoryId }
+        categories.first { $0.id == selectedCategoryId }
     }
-    
+
     func handleCoffeeSelectionWith(_ coffee: Coffee) {
         selectedCoffee = coffee
     }

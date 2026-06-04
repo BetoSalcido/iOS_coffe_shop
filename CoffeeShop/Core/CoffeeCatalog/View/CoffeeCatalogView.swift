@@ -36,8 +36,13 @@ struct CoffeeCatalogView: View {
                             .padding(.top)
                         }
 
-                        CatalogGridView(coffeeList: viewModel.coffees) { coffee in
-                            viewModel.handleCoffeeSelectionWith(coffee)
+                        if viewModel.isLoadingCoffees {
+                            InlineLoadingView(message: "Loading coffees…")
+                                .frame(minHeight: 200)
+                        } else {
+                            CatalogGridView(coffeeList: viewModel.coffees) { coffee in
+                                viewModel.handleCoffeeSelectionWith(coffee)
+                            }
                         }
                     }
                 }

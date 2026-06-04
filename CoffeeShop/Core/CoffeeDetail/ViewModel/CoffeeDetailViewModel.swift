@@ -66,6 +66,7 @@ private extension CoffeeDetailViewModel {
 
         coffeeDetail = Coffee(
             id: detail.id,
+            categoryId: detail.categoryId,
             name: detail.name,
             description: detail.description,
             longDescription: detail.longDescription,

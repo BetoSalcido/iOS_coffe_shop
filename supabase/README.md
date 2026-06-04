@@ -9,6 +9,8 @@ SQL migrations for the iOS app.
 | 0 | `000_auth_profiles.sql` | Supabase project (auth.users exists by default) | `profiles` + trigger on sign-up |
 | 1 | `001_catalog.sql` | — | Public menu (`coffee_categories`, `coffees`) |
 | 2 | `002_orders.sql` | auth + catalog | User orders (FK → `auth.users`, `coffees`) |
+| 3 | `003_coffee_category.sql` | catalog | `coffees.category_id` FK + `is_all_filter` on categories |
+| 4 | `004_more_coffees.sql` | catalog | 7 additional coffees (12 total) |
 
 **Auth in Supabase:** you do **not** create `auth.users` manually. Supabase Auth creates it when the project is created. You only add **`public.profiles`** for app data (name, `is_pro`, etc.).
 
@@ -26,8 +28,8 @@ SQL Editor → New query → paste each file in order → **Run**.
 | Table | Expected |
 |-------|----------|
 | `profiles` | Empty until first sign-up; row auto-created per user |
-| `coffee_categories` | 4 rows |
-| `coffees` | 5 rows |
+| `coffees` | 12 rows (each with `category_id`) |
+| `coffee_categories` | 4 rows (`All Coffee` has `is_all_filter = true`) |
 
 After a test sign-up in Auth → Users, you should see a matching row in `profiles`.
 
@@ -51,6 +53,18 @@ Remove `http://localhost:3000` from Site URL and Redirect URLs unless you run a 
 **Note:** The account may still be confirmed even if the browser shows an error after the redirect. Try **Login** in the app with the same email/password.
 
 For iOS-only development, disabling **Confirm email** (step 3 above) avoids this flow entirely.
+
+## Catalog categories
+
+Each coffee belongs to one **real** category (`category_id` FK). The **All Coffee** tab is special: `coffee_categories.is_all_filter = true` tells the app to load every coffee without filtering.
+
+| Coffee | Category |
+|--------|----------|
+| Coffee Panna, Americano Classico, Espresso Doppio | Americano |
+| Flat White, Mocha Fusi, Mocha, Caramel Latte, Vanilla Latte, Café Mocha | Latte |
+| Capuchino, Macchiato, Cortado | Machiato |
+
+If you already ran `001_catalog.sql` before this column existed, run **`003_coffee_category.sql`** in the SQL Editor.
 
 ## 5. Orders (next)
 

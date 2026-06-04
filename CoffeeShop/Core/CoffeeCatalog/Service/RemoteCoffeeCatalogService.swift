@@ -23,10 +23,14 @@ final class RemoteCoffeeCatalogService: CoffeeCatalogProviding {
         return dtos.map { $0.toDomain() }
     }
 
-    func fetchCoffees() async throws -> [Coffee] {
+    func fetchCoffees(forCategory category: CoffeeCategory) async throws -> [Coffee] {
+        let router = CoffeeRouter.fetchCoffees(
+            categoryId: category.isAllFilter ? nil : category.id
+        )
+
         let dtos: [CoffeeDTO] = try await network.request(
             [CoffeeDTO].self,
-            router: CoffeeRouter.fetchCoffees
+            router: router
         )
         return dtos.map { $0.toDomain() }
     }
