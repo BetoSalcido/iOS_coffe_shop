@@ -23,6 +23,7 @@ struct CatalogGridView: View {
                 CoffeeCardView(coffee: coffee) {
                     onTap(coffee)
                 }
+                .frame(minWidth: 0, maxWidth: .infinity)
             }
         }
         .padding(CatalogVisualMetrics.Grid.outerPadding)

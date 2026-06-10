@@ -16,7 +16,7 @@ struct CoffeeCardView: View {
             Image(coffee.imageURL)
                 .resizable()
                 .scaledToFill()
-                .frame(maxWidth: .infinity)
+                .frame(minWidth: 0, maxWidth: .infinity)
                 .frame(height: CatalogVisualMetrics.CoffeeCard.imageHeight)
                 .clipped()
                 .clipShape(
@@ -38,17 +38,23 @@ struct CoffeeCardView: View {
             Text(coffee.name)
                 .font(.headline)
                 .lineLimit(1)
+                .truncationMode(.tail)
+                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
 
             Text(coffee.description)
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .lineLimit(2)
-                .fixedSize(horizontal: false, vertical: true)
+                .truncationMode(.tail)
+                .multilineTextAlignment(.leading)
+                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                .layoutPriority(-1)
 
             HStack {
                 Text(coffee.formattedPrice)
                     .font(.title3)
                     .bold()
+                    .lineLimit(1)
 
                 Spacer(minLength: 0)
 
@@ -63,9 +69,10 @@ struct CoffeeCardView: View {
                 }
                 .buttonStyle(.plain)
             }
+            .frame(minWidth: 0, maxWidth: .infinity)
         }
         .padding(CatalogVisualMetrics.CoffeeCard.outerPadding)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
         .background(.white)
         .clipShape(
             RoundedRectangle(cornerRadius: CatalogVisualMetrics.CoffeeCard.outerCornerRadius, style: .continuous)
@@ -82,8 +89,9 @@ struct CoffeeCardView: View {
 }
 
 #Preview {
-    CoffeeCardView(coffee: DeveloperPreview().coffees[0], onTap: {
+    CoffeeCardView(coffee: DeveloperPreview().coffees[9], onTap: {
         print("Coffee tapped")
     })
+    .frame(width: 170)
     .padding()
 }
