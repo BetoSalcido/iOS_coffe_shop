@@ -18,6 +18,24 @@ struct CoffeeCatalogView: View {
 
     var body: some View {
         @Bindable var viewModel = viewModel
+
+        Group {
+            if viewModel.isLoadingCoffees {
+                InlineLoadingView(message: "Loading menu…")
+            } else if viewModel.categories.isEmpty, let error = viewModel.loadError {
+                InlineErrorView(
+                    title: "Couldn't load menu",
+                    message: error,
+                    onRetry: { viewModel.handleRetryLoad() }
+                )
+            } else {
+                displayContent()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func displayContent() -> some View {
         NavigationStack {
             ZStack {
                 ScrollView {
@@ -36,9 +54,16 @@ struct CoffeeCatalogView: View {
                             .padding(.top)
                         }
 
-                        if viewModel.isLoadingCoffees {
+                        if viewModel.isRefreshingCoffees {
                             InlineLoadingView(message: "Loading coffees…")
                                 .frame(minHeight: 200)
+                        } else if let error = viewModel.loadError {
+                            InlineErrorView(
+                                title: "Couldn't load coffees",
+                                message: error,
+                                onRetry: { viewModel.handleRetryLoad() }
+                            )
+                            .frame(minHeight: 200)
                         } else {
                             CatalogGridView(coffeeList: viewModel.coffees) { coffee in
                                 viewModel.handleCoffeeSelectionWith(coffee)

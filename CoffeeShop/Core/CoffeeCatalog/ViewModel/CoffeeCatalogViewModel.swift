@@ -15,7 +15,9 @@ final class CoffeeCatalogViewModel {
     var coffees = [Coffee]()
     var selectedCategoryId: String?
     var selectedCoffee: Coffee?
-    var isLoadingCoffees = false
+    var isLoadingCoffees = true
+    var isRefreshingCoffees = false
+    var loadError: String?
 
     private let service: any CoffeeCatalogProviding
 
@@ -32,6 +34,9 @@ final class CoffeeCatalogViewModel {
 private extension CoffeeCatalogViewModel {
 
     func fetchCategories() async {
+        isLoadingCoffees = true
+        loadError = nil
+
         do {
             let categories = try await service.fetchCoffeeCategories()
             self.categories = categories
@@ -39,22 +44,37 @@ private extension CoffeeCatalogViewModel {
             if let firstCategory = categories.first {
                 selectedCategoryId = firstCategory.id
                 updateCategoriesSelection()
-                await fetchCoffees(for: firstCategory)
+                await fetchCoffees(for: firstCategory, isInitialLoad: true)
+            } else {
+                isLoadingCoffees = false
+                loadError = "No coffee categories are available."
             }
         } catch {
-            print("[DEBUG]: Error fetching categories: \(error)")
+            isLoadingCoffees = false
+            loadError = error.localizedDescription
         }
     }
 
-    func fetchCoffees(for category: CoffeeCategory) async {
-        isLoadingCoffees = true
+    func fetchCoffees(for category: CoffeeCategory, isInitialLoad: Bool) async {
+        if isInitialLoad {
+            isLoadingCoffees = true
+        } else {
+            isRefreshingCoffees = true
+        }
+        loadError = nil
+
+        defer {
+            isLoadingCoffees = false
+            isRefreshingCoffees = false
+        }
 
         do {
             coffees = try await service.fetchCoffees(forCategory: category)
-            isLoadingCoffees = false
         } catch {
-            coffees = []
-            isLoadingCoffees = false
+            if isInitialLoad || coffees.isEmpty {
+                coffees = []
+                loadError = error.localizedDescription
+            }
             print("[DEBUG]: Error fetching coffees: \(error)")
         }
     }
@@ -79,9 +99,22 @@ extension CoffeeCatalogViewModel {
 
         selectedCategoryId = categoryId
         updateCategoriesSelection()
+        loadError = nil
 
         Task {
-            await fetchCoffees(for: category)
+            await fetchCoffees(for: category, isInitialLoad: false)
+        }
+    }
+
+    func handleRetryLoad() {
+        loadError = nil
+
+        Task {
+            if categories.isEmpty {
+                await fetchCategories()
+            } else if let category = getSelectedCategory() {
+                await fetchCoffees(for: category, isInitialLoad: coffees.isEmpty)
+            }
         }
     }
 
