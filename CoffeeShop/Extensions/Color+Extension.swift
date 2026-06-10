@@ -58,4 +58,8 @@ extension Color {
         static let primary = Color("TagPrimaryText")
         static let primaryBackgtound = Color("TagPrimaryBackground")
     }
+    
+    enum TabItem {
+        static let color = Color("TabItemColor")
+    }
 }

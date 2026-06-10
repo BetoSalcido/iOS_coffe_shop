@@ -14,33 +14,33 @@ struct MainTabBarView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             CoffeeCatalogView(serviceProvider: serviceProvider)
-                .tabItem {
-                    Image("HomeIcon")
-                }
+                .tabItem { tabIcon("HomeIcon", tab: .home) }
                 .tag(AppTab.home)
-
+            
             FavoritesView()
-                .tabItem {
-                    Image("FavoritesIcon")
-                }
+                .tabItem { tabIcon("FavoritesIcon", tab: .favorites) }
                 .tag(AppTab.favorites)
-
+            
             NavigationStack {
                 OrderView(service: serviceProvider.order)
             }
-            .tabItem {
-                Image("CheckoutIcon")
-            }
+            .tabItem { tabIcon("CheckoutIcon", tab: .order) }
             .tag(AppTab.order)
-
+            
             NavigationStack {
                 SettingsView(serviceProvider: serviceProvider)
             }
-            .tabItem {
-                Image("SettingsIcon")
-            }
+            .tabItem { tabIcon("SettingsIcon", tab: .settings) }
             .tag(AppTab.settings)
         }
+        .tint(Color.TabItem.color)
+    }
+    
+    
+    @ViewBuilder
+    private func tabIcon(_ name: String, tab: AppTab) -> some View {
+        Image(name)
+            .renderingMode(.template)
     }
 }
 
