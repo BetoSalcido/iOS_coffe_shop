@@ -11,6 +11,7 @@ SQL migrations for the iOS app.
 | 2 | `002_orders.sql` | auth + catalog | User orders (FK → `auth.users`, `coffees`) |
 | 3 | `003_coffee_category.sql` | catalog | `coffees.category_id` FK + `is_all_filter` on categories |
 | 4 | `004_more_coffees.sql` | catalog | 7 additional coffees (12 total) |
+| 5 | `005_coffee_image_urls.sql` | catalog | Replace asset-name placeholders with HTTPS URLs (Kingfisher) |
 
 **Auth in Supabase:** you do **not** create `auth.users` manually. Supabase Auth creates it when the project is created. You only add **`public.profiles`** for app data (name, `is_pro`, etc.).
 
@@ -65,6 +66,18 @@ Each coffee belongs to one **real** category (`category_id` FK). The **All Coffe
 | Capuchino, Macchiato, Cortado | Machiato |
 
 If you already ran `001_catalog.sql` before this column existed, run **`003_coffee_category.sql`** in the SQL Editor.
+
+## Coffee images (`image_url`)
+
+`coffees.image_url` must be a **public HTTPS URL** for Kingfisher (`KFImage`) in the iOS app — not an asset name like `CaffePanna`.
+
+Fresh installs: `001_catalog.sql` and `004_more_coffees.sql` already seed Unsplash CDN URLs.
+
+**Existing database** that still has asset names: run **`005_coffee_image_urls.sql`** in the SQL Editor. It updates all 12 rows in place.
+
+For production, upload images to **Supabase Storage** and use URLs like:
+
+`https://YOUR_PROJECT_REF.supabase.co/storage/v1/object/public/coffee-images/{file}.jpg`
 
 ## 5. Orders (next)
 

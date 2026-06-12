@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		698A6CC12FDB84A50055C1B0 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 698A6CC02FDB84A50055C1B0 /* Kingfisher */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		690273E62E8F3C6A000093D4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				698A6CC12FDB84A50055C1B0 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = CoffeeShop;
 			packageProductDependencies = (
+				698A6CC02FDB84A50055C1B0 /* Kingfisher */,
 			);
 			productName = CoffeeShop;
 			productReference = 690273D82E8F3C68000093D4 /* CoffeeShop.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = 690273CF2E8F3C68000093D4;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				698A6CBF2FDB84A50055C1B0 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 690273D92E8F3C68000093D4 /* Products */;
 			projectDirPath = "";
@@ -550,6 +559,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		698A6CBF2FDB84A50055C1B0 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = exactVersion;
+				version = 8.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		698A6CC02FDB84A50055C1B0 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 698A6CBF2FDB84A50055C1B0 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 690273D02E8F3C68000093D4 /* Project object */;
 }

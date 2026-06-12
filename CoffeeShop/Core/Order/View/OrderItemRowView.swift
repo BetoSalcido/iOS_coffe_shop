@@ -19,11 +19,11 @@ struct OrderItemRowView: View {
             }
 
             HStack(alignment: .center, spacing: 12) {
-                Image(item.coffee.imageURL)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 64, height: 64)
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                RemoteCoffeeImage(
+                    url: item.coffee.imageURL,
+                    width: 64,
+                    height: 64
+                )
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(item.coffee.name)

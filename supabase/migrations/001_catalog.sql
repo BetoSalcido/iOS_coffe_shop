@@ -35,7 +35,7 @@ comment on column public.coffees.category_id is 'FK to coffee_categories (exclud
 create index if not exists coffees_category_id_idx on public.coffees (category_id);
 
 comment on table public.coffees is 'Coffee catalog; sizes stored as JSON array for CoffeeSizeDTO';
-comment on column public.coffees.sizes is 'JSON array: [{ "id", "name", "is_active" }, ...]';
+comment on column public.coffees.image_url is 'Public HTTPS URL for remote image loading (Supabase Storage or CDN)';
 
 -- ---------------------------------------------------------------------------
 -- Row Level Security — public read, no client writes
@@ -90,7 +90,7 @@ values
         'Coffee Panna is an espresso topped with a layer of lightly whipped cream. Typically served in a small cup of about 60–90 ml, it balances the intensity of espresso with the smooth sweetness of cream, creating a rich and velvety experience.',
         4.6,
         3.50,
-        'CaffePanna',
+        'https://images.unsplash.com/photo-1514434753137-45f99300460e?auto=format&fit=crop&w=800&q=80',
         '[
             {"id": "1", "name": "S", "is_active": false},
             {"id": "2", "name": "M", "is_active": false},
@@ -105,7 +105,7 @@ values
         'A Flat White is a smooth blend of espresso and finely textured steamed milk. Usually around 160 ml (5.5 oz), it has a thin layer of microfoam and a rich espresso base, providing a creamy texture with a strong coffee flavor.',
         4.8,
         4.00,
-        'FlatWhiteImage',
+        'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80',
         '[
             {"id": "1", "name": "S", "is_active": false},
             {"id": "2", "name": "M", "is_active": false},
@@ -120,7 +120,7 @@ values
         'Mocha Fusi combines rich chocolate syrup with espresso and steamed milk, creating a 200 ml (7 oz) beverage that blends sweetness with a deep coffee profile. Often topped with whipped cream or cocoa powder for extra indulgence.',
         4.7,
         4.20,
-        'MochaFusi',
+        'https://images.unsplash.com/photo-1577727205894-9552518757d6?auto=format&fit=crop&w=800&q=80',
         '[
             {"id": "1", "name": "S", "is_active": false},
             {"id": "2", "name": "M", "is_active": false},
@@ -135,7 +135,7 @@ values
         'A Mocha is a harmonious mix of espresso, steamed milk, and chocolate. Served in a cup of about 250 ml (8 oz), it offers the perfect balance between the richness of cocoa and the strength of coffee, often finished with foam or whipped cream.',
         4.5,
         3.80,
-        'MochaImage',
+        'https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=800&q=80',
         '[
             {"id": "1", "name": "S", "is_active": false},
             {"id": "2", "name": "M", "is_active": false},
@@ -150,7 +150,7 @@ values
         'A Cappuccino is an approximately 150 ml (5 oz) beverage made with 25 ml of espresso, 85 ml of steamed milk, and a thick layer of milk foam. It offers a perfect balance of bold espresso and creamy texture, often dusted with cocoa powder.',
         4.9,
         3.90,
-        'CaffePanna',
+        'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=800&q=80',
         '[
             {"id": "1", "name": "S", "is_active": false},
             {"id": "2", "name": "M", "is_active": false},
@@ -165,7 +165,7 @@ values
         'A classic Americano combines a double shot of espresso with hot water, yielding a smooth, full-bodied cup around 240 ml. It preserves the espresso''s crema while offering a lighter mouthfeel than a straight shot—ideal for slow sipping.',
         4.4,
         3.20,
-        'FlatWhiteImage',
+        'https://images.unsplash.com/photo-1510591509098-f4fdc866797f?auto=format&fit=crop&w=800&q=80',
         '[
             {"id": "1", "name": "S", "is_active": false},
             {"id": "2", "name": "M", "is_active": false},
@@ -180,7 +180,7 @@ values
         'Espresso Doppio is a double shot pulled into a small demitasse—about 60 ml of concentrated coffee with a rich crema layer. Bold, aromatic, and the foundation for most milk-based drinks on our menu.',
         4.7,
         2.90,
-        'CaffePanna',
+        'https://images.unsplash.com/photo-1485808191679-5f86510681a51?auto=format&fit=crop&w=800&q=80',
         '[
             {"id": "1", "name": "S", "is_active": false},
             {"id": "2", "name": "M", "is_active": false},
@@ -195,7 +195,7 @@ values
         'Steamed milk meets espresso and buttery caramel syrup in this 350 ml favorite. Sweet but balanced, with a silky microfoam finish and optional caramel drizzle for extra indulgence.',
         4.6,
         4.50,
-        'MochaFusi',
+        'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=800&q=80',
         '[
             {"id": "1", "name": "S", "is_active": false},
             {"id": "2", "name": "M", "is_active": false},
@@ -210,7 +210,7 @@ values
         'A comforting blend of espresso, steamed milk, and Madagascar vanilla syrup. Served around 350 ml with a light foam cap—creamy, fragrant, and gently sweet without overpowering the coffee.',
         4.5,
         4.30,
-        'FlatWhiteImage',
+        'https://images.unsplash.com/photo-1570197788414-7784f5579574?auto=format&fit=crop&w=800&q=80',
         '[
             {"id": "1", "name": "S", "is_active": false},
             {"id": "2", "name": "M", "is_active": false},
@@ -225,7 +225,7 @@ values
         'Our signature Café Mocha layers dark chocolate, espresso, and steamed milk in a 300 ml cup. Topped with whipped cream and cocoa dust for a dessert-like treat that still delivers a proper coffee kick.',
         4.8,
         4.60,
-        'CaffeeMocha',
+        'https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80',
         '[
             {"id": "1", "name": "S", "is_active": false},
             {"id": "2", "name": "M", "is_active": false},
@@ -240,7 +240,7 @@ values
         'A true macchiato—“marked” with a spoonful of velvety milk foam atop a single espresso shot. Roughly 90 ml total, intense and quick, perfect when you want espresso with just a touch of creaminess.',
         4.7,
         3.40,
-        'CaffePanna',
+        'https://images.unsplash.com/photo-1551033403-04081d934274?auto=format&fit=crop&w=800&q=80',
         '[
             {"id": "1", "name": "S", "is_active": false},
             {"id": "2", "name": "M", "is_active": false},
@@ -255,7 +255,7 @@ values
         'The Cortado balances equal parts espresso and warm steamed milk in a small glass—about 120 ml. Less foam than a cappuccino, more coffee forward than a latte, with a smooth, rounded finish.',
         4.6,
         3.70,
-        'FlatWhiteImage',
+        'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=800&q=80',
         '[
             {"id": "1", "name": "S", "is_active": false},
             {"id": "2", "name": "M", "is_active": false},

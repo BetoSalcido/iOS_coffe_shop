@@ -13,19 +13,12 @@ struct CoffeeCardView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: CatalogVisualMetrics.CoffeeCard.contentSpacing) {
-            Image(coffee.imageURL)
-                .resizable()
-                .scaledToFill()
-                .frame(minWidth: 0, maxWidth: .infinity)
-                .frame(height: CatalogVisualMetrics.CoffeeCard.imageHeight)
-                .clipped()
-                .clipShape(
-                    RoundedRectangle(
-                        cornerRadius: CatalogVisualMetrics.CoffeeCard.imageCornerRadius,
-                        style: .continuous
-                    )
-                )
-                .overlay(alignment: .topTrailing) {
+            RemoteCoffeeImage(
+                url: coffee.imageURL,
+                height: CatalogVisualMetrics.CoffeeCard.imageHeight,
+                cornerRadius: CatalogVisualMetrics.CoffeeCard.imageCornerRadius
+            )
+            .overlay(alignment: .topTrailing) {
                     HStack(spacing: CatalogVisualMetrics.CoffeeCard.ratingStarIconSpacing) {
                         Image(systemName: "star.fill").font(.caption2)
                         Text(String(format: "%.1f", coffee.rating)).font(.caption2).bold()

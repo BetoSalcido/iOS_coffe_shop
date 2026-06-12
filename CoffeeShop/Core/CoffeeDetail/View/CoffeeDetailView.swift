@@ -39,6 +39,7 @@ struct CoffeeDetailView: View {
                 InlineLoadingView()
             }
         }
+        .navigationTitle("Detail")
         .navigationBarTitleDisplayMode(.inline)
         .blackNavigationBarStyle()
         .navigationDestination(isPresented: $showOrder) {

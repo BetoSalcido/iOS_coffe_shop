@@ -14,7 +14,7 @@ struct CoffeeDTO: Decodable {
     let longDescription: String
     let rating: Double
     let price: Double
-    let imageUrl: String
+    let imageUrl: URL
     let sizes: [CoffeeSizeDTO]
 }
 
