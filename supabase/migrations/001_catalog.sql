@@ -27,6 +27,7 @@ create table if not exists public.coffees (
     price numeric(10, 2) not null check (price >= 0),
     image_url text not null,
     sizes jsonb not null default '[]'::jsonb,
+    modifiers jsonb not null default '[]'::jsonb,
     created_at timestamptz not null default now()
 );
 
@@ -34,8 +35,10 @@ comment on column public.coffees.category_id is 'FK to coffee_categories (exclud
 
 create index if not exists coffees_category_id_idx on public.coffees (category_id);
 
-comment on table public.coffees is 'Coffee catalog; sizes stored as JSON array for CoffeeSizeDTO';
+comment on table public.coffees is 'Coffee catalog; sizes and modifiers stored as JSON for detail screen';
 comment on column public.coffees.image_url is 'Public HTTPS URL for remote image loading (Supabase Storage or CDN)';
+comment on column public.coffees.sizes is 'Volume options: id, name, is_active (single-select in app)';
+comment on column public.coffees.modifiers is 'Customization options: id, name, is_active (multi-select in app)';
 
 -- ---------------------------------------------------------------------------
 -- Row Level Security — public read, no client writes
@@ -270,4 +273,5 @@ on conflict (id) do update set
     rating = excluded.rating,
     price = excluded.price,
     image_url = excluded.image_url,
-    sizes = excluded.sizes;
+    sizes = excluded.sizes,
+    modifiers = excluded.modifiers;

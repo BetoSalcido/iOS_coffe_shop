@@ -64,17 +64,22 @@ private extension CoffeeDetailViewModel {
             )
         }
 
-        coffeeDetail = CoffeeDetail(
-            id: detail.id,
-            categoryId: detail.categoryId,
-            name: detail.name,
-            description: detail.description,
-            longDescription: detail.longDescription,
-            rating: detail.rating,
-            price: detail.price,
-            imageURL: detail.imageURL,
-            sizes: updatedSizes
-        )
+        coffeeDetail = detail.updating(sizes: updatedSizes)
+    }
+
+    func toggleModifier(_ modifierId: String) {
+        guard let detail = coffeeDetail else { return }
+
+        let updatedModifiers = detail.modifiers.map { modifier in
+            guard modifier.id == modifierId else { return modifier }
+            return CoffeeModifier(
+                id: modifier.id,
+                name: modifier.name,
+                isActive: !modifier.isActive
+            )
+        }
+
+        coffeeDetail = detail.updating(modifiers: updatedModifiers)
     }
 }
 
@@ -85,12 +90,38 @@ extension CoffeeDetailViewModel {
         selectedSizeId = size.id
         updateSelectedSize(size.id)
     }
-    
+
+    func handleCoffeeModifierSelectionWith(_ modifier: CoffeeModifier) {
+        toggleModifier(modifier.id)
+    }
+
     func handleRetryLoad() {
         loadError = nil
         isLoading = true
         Task {
             await fetchCoffeeDetail()
         }
+    }
+}
+
+// MARK: - CoffeeDetail updates
+private extension CoffeeDetail {
+
+    func updating(
+        sizes: [CoffeeSize]? = nil,
+        modifiers: [CoffeeModifier]? = nil
+    ) -> CoffeeDetail {
+        CoffeeDetail(
+            id: id,
+            categoryId: categoryId,
+            name: name,
+            description: description,
+            longDescription: longDescription,
+            rating: rating,
+            price: price,
+            imageURL: imageURL,
+            sizes: sizes ?? self.sizes,
+            modifiers: modifiers ?? self.modifiers
+        )
     }
 }

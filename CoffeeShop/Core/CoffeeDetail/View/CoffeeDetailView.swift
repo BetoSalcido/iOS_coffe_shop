@@ -51,8 +51,10 @@ struct CoffeeDetailView: View {
     private func detailContent(_ detail: CoffeeDetail) -> some View {
         ScrollView {
             CoffeeDetailHeaderView(coffee: detail)
-            CoffeeDetailBodyView(coffee: detail) {
-                viewModel.handleCoffeeSizeSelectionWith($0)
+            CoffeeDetailBodyView(coffee: detail) { size in
+                viewModel.handleCoffeeSizeSelectionWith(size)
+            } onModifierTap: { modifier in
+                viewModel.handleCoffeeModifierSelectionWith(modifier)
             }
         }
         .background(Color(hex: "#F9F9F9"))

@@ -18,6 +18,13 @@ struct CoffeeDetailDTO: Decodable {
     let price: Double
     let imageUrl: URL
     let sizes: [CoffeeSizeDTO]
+    let modifiers: [CoffeeModifierDTO]?
+}
+
+struct CoffeeModifierDTO: Decodable {
+    let id: String
+    let name: String
+    let isActive: Bool
 }
 
 // MARK: - Domain Mapping
@@ -33,7 +40,15 @@ extension CoffeeDetailDTO {
             rating: rating,
             price: price,
             imageURL: imageUrl,
-            sizes: sizes.map { $0.toDomain() }
+            sizes: sizes.map { $0.toDomain() },
+            modifiers: (modifiers ?? []).map { $0.toDomain() }
         )
+    }
+}
+
+extension CoffeeModifierDTO {
+
+    func toDomain() -> CoffeeModifier {
+        CoffeeModifier(id: id, name: name, isActive: isActive)
     }
 }

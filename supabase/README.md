@@ -13,6 +13,7 @@ SQL migrations for the iOS app.
 | 4 | `004_more_coffees.sql` | catalog | 7 additional coffees (12 total) |
 | 5 | `005_coffee_image_urls.sql` | catalog | Replace asset-name placeholders with HTTPS URLs (Kingfisher) |
 | 6 | `006_coffee_details.sql` | catalog | Detail copy + size options for the coffee detail screen |
+| 7 | `007_coffee_modifiers.sql` | catalog | `modifiers` column + size labels per drink type |
 
 **Auth in Supabase:** you do **not** create `auth.users` manually. Supabase Auth creates it when the project is created. You only add **`public.profiles`** for app data (name, `is_pro`, etc.).
 
@@ -96,7 +97,7 @@ Example (Coffee Panna):
 GET .../rest/v1/coffees?id=eq.b2000001-0001-4001-8001-000000000001
 ```
 
-### Fields mapped to `CoffeeDTO` → `Coffee`
+### Fields mapped to `CoffeeDetailDTO` → `CoffeeDetail`
 
 | DB column | iOS property | Detail screen usage |
 |-----------|--------------|---------------------|
@@ -106,23 +107,45 @@ GET .../rest/v1/coffees?id=eq.b2000001-0001-4001-8001-000000000001
 | `rating` | `rating` | Header rating badge |
 | `price` | `price` | Footer price |
 | `image_url` | `imageURL` | Header image (Kingfisher) |
-| `sizes` (jsonb) | `sizes` | Size picker chips |
+| `sizes` (jsonb) | `sizes` | Size picker (single-select) |
+| `modifiers` (jsonb) | `modifiers` | Modifiers picker (multi-select) |
 
-### `sizes` JSON format
+### Size labels by drink type
+
+| Drink type | Examples | Size options |
+|------------|----------|--------------|
+| Lattes / mochas | Flat White, Mocha, Café Mocha | `8 oz`, `12 oz`, `16 oz` |
+| Large lattes | Caramel Latte, Vanilla Latte | `12 oz`, `16 oz`, `20 oz` |
+| Americano | Americano Classico | `Small`, `Medium`, `Large` |
+| Espresso shots | Espresso Doppio | `Single`, `Double` |
+| Compact cups | Capuchino, Macchiato, Cortado, Coffee Panna | `Small`, `Medium` (or `Small`/`Medium`/`Large` for cappuccino) |
+
+### `sizes` JSON format (volume — pick one)
 
 ```json
 [
-  {"id": "1", "name": "Regular", "is_active": true},
-  {"id": "2", "name": "Extra Foam", "is_active": false}
+  {"id": "1", "name": "8 oz", "is_active": false},
+  {"id": "2", "name": "12 oz", "is_active": true},
+  {"id": "3", "name": "16 oz", "is_active": false}
 ]
 ```
 
-Set **`is_active: true`** on one size so the app pre-selects it (`CoffeeDetailViewModel`).
+### `modifiers` JSON format (extras — pick many)
+
+```json
+[
+  {"id": "m1", "name": "Extra chocolate", "is_active": false},
+  {"id": "m2", "name": "Light milk", "is_active": false},
+  {"id": "m3", "name": "Sugar", "is_active": false}
+]
+```
+
+Set **`is_active: true`** on exactly one size for the default selection. Modifiers start with **`is_active: false`**; the app toggles them on tap.
 
 ### Seed / update
 
-- **Fresh install:** run `001_catalog.sql` (base rows), then **`006_coffee_details.sql`** for full detail copy and sizes.
-- **Existing database** with generic `S` / `M` / `L` sizes: run **`006_coffee_details.sql`** in the SQL Editor.
+- **Fresh install:** run `001` → `007` in order (`007` adds `modifiers` and sets sizes per drink).
+- **Existing database:** run **`007_coffee_modifiers.sql`** after `006`.
 
 ## 5. Orders (next)
 

@@ -17,6 +17,7 @@ struct CoffeeDetail: Identifiable, Codable, Hashable {
     let price: Double
     let imageURL: URL
     let sizes: [CoffeeSize]
+    let modifiers: [CoffeeModifier]
     
     var formattedPrice: String {
         return String(format: "$%.2f", price)
