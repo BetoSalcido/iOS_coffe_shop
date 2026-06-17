@@ -20,4 +20,11 @@ final class CoffeeCatalogService: CoffeeCatalogProviding {
         }
         return allCoffees.filter { $0.categoryId == category.id }
     }
+
+    func fetchCoffees(ids: [String]) async throws -> [Coffee] {
+        guard !ids.isEmpty else { return [] }
+        let allCoffees = DeveloperPreview().coffees
+        let idSet = Set(ids)
+        return allCoffees.filter { idSet.contains($0.id) }
+    }
 }

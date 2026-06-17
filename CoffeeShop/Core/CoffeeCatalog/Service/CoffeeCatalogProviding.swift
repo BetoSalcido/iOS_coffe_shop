@@ -11,4 +11,5 @@ import Foundation
 protocol CoffeeCatalogProviding: AnyObject {
     func fetchCoffeeCategories() async throws -> [CoffeeCategory]
     func fetchCoffees(forCategory category: CoffeeCategory) async throws -> [Coffee]
+    func fetchCoffees(ids: [String]) async throws -> [Coffee]
 }

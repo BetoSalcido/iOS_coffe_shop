@@ -7,4 +7,5 @@ import Foundation
 
 protocol NetworkProviding: AnyObject {
     func request<T: Decodable>(_ type: T.Type, router: any URLRequestConvertible) async throws -> T
+    func perform(_ router: any URLRequestConvertible) async throws
 }

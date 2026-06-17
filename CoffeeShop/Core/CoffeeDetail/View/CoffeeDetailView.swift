@@ -11,16 +11,24 @@ struct CoffeeDetailView: View {
 
     @State private var viewModel: CoffeeDetailViewModel
     @State private var showOrder = false
+    @State private var showFavoriteError = false
 
     private let orderService: any OrderProviding
 
     init(
         coffee: Coffee,
         coffeeDetailsService: any CoffeeDetailsProviding,
+        favoritesService: any FavoritesProviding,
         orderService: any OrderProviding
     ) {
         self.orderService = orderService
-        _viewModel = State(wrappedValue: CoffeeDetailViewModel(service: coffeeDetailsService, coffee: coffee))
+        _viewModel = State(
+            wrappedValue: CoffeeDetailViewModel(
+                service: coffeeDetailsService,
+                favoritesService: favoritesService,
+                coffee: coffee
+            )
+        )
     }
 
     var body: some View {
@@ -45,6 +53,31 @@ struct CoffeeDetailView: View {
         .navigationDestination(isPresented: $showOrder) {
             OrderView(service: orderService)
         }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    Task {
+                        await viewModel.handleFavoriteSelection()
+                        showFavoriteError = viewModel.favoriteActionError != nil
+                    }
+                } label: {
+                    Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
+                        .foregroundStyle(viewModel.isFavorite ? .red : .primary)
+                }
+            }
+        }
+        .alert(
+            "Favorites",
+            isPresented: $showFavoriteError,
+            actions: {
+                Button("OK") {
+                    viewModel.clearFavoriteActionError()
+                }
+            },
+            message: {
+                Text(viewModel.favoriteActionError ?? "")
+            }
+        )
     }
 
     @ViewBuilder
@@ -71,6 +104,7 @@ struct CoffeeDetailView: View {
         CoffeeDetailView(
             coffee: DeveloperPreview().coffees[1],
             coffeeDetailsService: AppServiceProvider.live.coffeeDetails,
+            favoritesService: AppServiceProvider.live.favorites,
             orderService: AppServiceProvider.live.order
         )
     }

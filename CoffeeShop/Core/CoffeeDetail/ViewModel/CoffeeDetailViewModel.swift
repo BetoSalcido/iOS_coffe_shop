@@ -14,23 +14,36 @@ final class CoffeeDetailViewModel {
     private(set) var coffeeDetail: CoffeeDetail?
     private(set) var isLoading = true
     private(set) var loadError: String?
+    private(set) var isFavorite = false
+    private(set) var favoriteActionError: String?
     private var selectedSizeId: String?
 
     private let service: any CoffeeDetailsProviding
+    private let favoritesService: any FavoritesProviding
     private(set) var coffee: Coffee
 
-    init(service: any CoffeeDetailsProviding, coffee: Coffee) {
+    init(
+        service: any CoffeeDetailsProviding,
+        favoritesService: any FavoritesProviding,
+        coffee: Coffee
+    ) {
         self.service = service
+        self.favoritesService = favoritesService
         self.coffee = coffee
 
         Task {
-            await fetchCoffeeDetail()
+            await load()
         }
     }
 }
 
 // MARK: - Private Methods
 private extension CoffeeDetailViewModel {
+
+    func load() async {
+        await fetchCoffeeDetail()
+        await refreshFavoriteState()
+    }
 
     func fetchCoffeeDetail() async {
         do {
@@ -50,6 +63,17 @@ private extension CoffeeDetailViewModel {
             isLoading = false
             coffeeDetail = nil
             loadError = error.localizedDescription
+        }
+    }
+
+    func refreshFavoriteState() async {
+        do {
+            let ids = try await favoritesService.fetchFavoriteCoffeeIds()
+            isFavorite = ids.contains(coffee.id)
+        } catch is FavoritesError {
+            isFavorite = false
+        } catch {
+            // Non-blocking: detail still works if favorites fail to load.
         }
     }
 
@@ -99,8 +123,28 @@ extension CoffeeDetailViewModel {
         loadError = nil
         isLoading = true
         Task {
-            await fetchCoffeeDetail()
+            await load()
         }
+    }
+
+    func handleFavoriteSelection() async {
+        favoriteActionError = nil
+
+        do {
+            if isFavorite {
+                try await favoritesService.removeFavorite(coffeeId: coffee.id)
+                isFavorite = false
+            } else {
+                try await favoritesService.addFavorite(coffeeId: coffee.id)
+                isFavorite = true
+            }
+        } catch {
+            favoriteActionError = error.localizedDescription
+        }
+    }
+
+    func clearFavoriteActionError() {
+        favoriteActionError = nil
     }
 }
 

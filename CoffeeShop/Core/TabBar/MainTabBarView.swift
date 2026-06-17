@@ -17,7 +17,7 @@ struct MainTabBarView: View {
                 .tabItem { tabIcon("HomeIcon", tab: .home) }
                 .tag(AppTab.home)
             
-            FavoritesView()
+            FavoritesView(serviceProvider: serviceProvider)
                 .tabItem { tabIcon("FavoritesIcon", tab: .favorites) }
                 .tag(AppTab.favorites)
             

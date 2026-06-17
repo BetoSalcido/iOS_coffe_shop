@@ -34,4 +34,14 @@ final class RemoteCoffeeCatalogService: CoffeeCatalogProviding {
         )
         return dtos.map { $0.toDomain() }
     }
+
+    func fetchCoffees(ids: [String]) async throws -> [Coffee] {
+        guard !ids.isEmpty else { return [] }
+
+        let dtos: [CoffeeDTO] = try await network.request(
+            [CoffeeDTO].self,
+            router: CoffeeRouter.fetchCoffeesByIds(ids: ids)
+        )
+        return dtos.map { $0.toDomain() }
+    }
 }

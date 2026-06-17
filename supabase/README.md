@@ -14,6 +14,7 @@ SQL migrations for the iOS app.
 | 5 | `005_coffee_image_urls.sql` | catalog | Replace asset-name placeholders with HTTPS URLs (Kingfisher) |
 | 6 | `006_coffee_details.sql` | catalog | Detail copy + size options for the coffee detail screen |
 | 7 | `007_coffee_modifiers.sql` | catalog | `modifiers` column + size labels per drink type |
+| 8 | `008_user_favorites.sql` | auth + catalog | `user_favorites` table (coffee IDs per user) |
 
 **Auth in Supabase:** you do **not** create `auth.users` manually. Supabase Auth creates it when the project is created. You only add **`public.profiles`** for app data (name, `is_pro`, etc.).
 
@@ -147,6 +148,27 @@ Set **`is_active: true`** on exactly one size for the default selection. Modifie
 - **Fresh install:** run `001` → `007` in order (`007` adds `modifiers` and sets sizes per drink).
 - **Existing database:** run **`007_coffee_modifiers.sql`** after `006`.
 
+## User favorites
+
+Authenticated users save **coffee IDs** in `public.user_favorites` (not full detail rows).
+
+| Column | Purpose |
+|--------|---------|
+| `user_id` | FK → `auth.users` |
+| `coffee_id` | FK → `coffees` |
+
+### PostgREST
+
+```
+GET    /rest/v1/user_favorites?select=coffee_id&user_id=eq.{user_uuid}
+POST   /rest/v1/user_favorites  { "user_id": "...", "coffee_id": "..." }
+DELETE /rest/v1/user_favorites?user_id=eq.{user_uuid}&coffee_id=eq.{coffee_uuid}
+```
+
+The app loads favorite IDs, then fetches catalog rows with `GET /coffees?id=in.(...)`.
+
+Run **`008_user_favorites.sql`** in the SQL Editor (requires sign-in for RLS).
+
 ## 5. Orders (next)
 
 Run `002_orders.sql` and wire `OrderService` to PostgREST.
@@ -158,6 +180,7 @@ Run `002_orders.sql` and wire `OrderService` to PostgREST.
 | `profiles` | — | read/update own row |
 | `coffee_categories` | SELECT | SELECT |
 | `coffees` | SELECT | SELECT |
+| `user_favorites` | — | own rows only |
 | `orders` | — | own rows only |
 | `order_items` | — | own orders only |
 

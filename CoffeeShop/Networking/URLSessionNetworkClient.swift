@@ -46,6 +46,25 @@ final class URLSessionNetworkClient: NetworkProviding {
             throw NetworkingService.NetworkError.decodingFailed(underlying: error)
         }
     }
+
+    func perform(_ router: any URLRequestConvertible) async throws {
+        var request = try router.makeURLRequest()
+        NetworkingService.APIConfig.applySupabaseHeaders(
+            to: &request,
+            accessToken: accessTokenProvider?.accessToken
+        )
+
+        let data: Data
+        let response: URLResponse
+
+        do {
+            (data, response) = try await urlSession.data(for: request)
+        } catch {
+            throw NetworkingService.NetworkError.transportError(underlying: error)
+        }
+
+        try validateResponse(data: data, response: response)
+    }
 }
 
 // MARK: - Private Methods

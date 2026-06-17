@@ -76,6 +76,7 @@ struct CoffeeCatalogView: View {
                     CoffeeDetailView(
                         coffee: coffee,
                         coffeeDetailsService: serviceProvider.coffeeDetails,
+                        favoritesService: serviceProvider.favorites,
                         orderService: serviceProvider.order
                     )
                 }
