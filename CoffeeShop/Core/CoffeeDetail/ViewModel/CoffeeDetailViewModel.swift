@@ -11,15 +11,15 @@ import Observation
 @Observable @MainActor
 final class CoffeeDetailViewModel {
 
-    var coffeeDetail: Coffee?
-    var selectedSizeId: String?
-    var isLoading = true
-    var loadError: String?
+    private(set) var coffeeDetail: CoffeeDetail?
+    private(set) var isLoading = true
+    private(set) var loadError: String?
+    private var selectedSizeId: String?
 
-    private let service: any CoffeeCatalogProviding
-    private let coffee: Coffee
+    private let service: any CoffeeDetailsProviding
+    private(set) var coffee: Coffee
 
-    init(service: any CoffeeCatalogProviding, coffee: Coffee) {
+    init(service: any CoffeeDetailsProviding, coffee: Coffee) {
         self.service = service
         self.coffee = coffee
 
@@ -64,7 +64,7 @@ private extension CoffeeDetailViewModel {
             )
         }
 
-        coffeeDetail = Coffee(
+        coffeeDetail = CoffeeDetail(
             id: detail.id,
             categoryId: detail.categoryId,
             name: detail.name,

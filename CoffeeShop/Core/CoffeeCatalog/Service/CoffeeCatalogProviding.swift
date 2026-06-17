@@ -7,9 +7,8 @@
 
 import Foundation
 
-/// Abstraction for loading catalog data (categories, list, detail). Enables injecting mocks in tests and previews.
+/// Abstraction for loading catalog list data (categories, coffees). Enables injecting mocks in tests and previews.
 protocol CoffeeCatalogProviding: AnyObject {
     func fetchCoffeeCategories() async throws -> [CoffeeCategory]
     func fetchCoffees(forCategory category: CoffeeCategory) async throws -> [Coffee]
-    func fetchCoffeeDetail(_ coffeeId: String) async throws -> Coffee
 }

@@ -75,7 +75,7 @@ struct CoffeeCatalogView: View {
                 .navigationDestination(item: $viewModel.selectedCoffee) { coffee in
                     CoffeeDetailView(
                         coffee: coffee,
-                        catalogService: serviceProvider.catalog,
+                        coffeeDetailsService: serviceProvider.coffeeDetails,
                         orderService: serviceProvider.order
                     )
                 }

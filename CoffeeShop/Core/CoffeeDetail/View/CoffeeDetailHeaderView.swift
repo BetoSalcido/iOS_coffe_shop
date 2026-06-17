@@ -9,15 +9,16 @@ import SwiftUI
 
 struct CoffeeDetailHeaderView: View {
     
-    let coffee: Coffee
+    let coffee: CoffeeDetail
     
     var body: some View {
         VStack(spacing: 0) {
-            Image("CaffeeMocha")
-                .resizable()
-                .frame(height: 200)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical)
+            RemoteCoffeeImage(
+                url: coffee.imageURL,
+                height: 200,
+                cornerRadius: 10
+            )
+            .padding(.vertical)
             
             HStack {
                 Text(coffee.name)
@@ -66,5 +67,5 @@ struct CoffeeDetailHeaderView: View {
 }
 
 #Preview {
-    CoffeeDetailHeaderView(coffee: DeveloperPreview().coffees[0])
+    CoffeeDetailHeaderView(coffee: DeveloperPreview().coffeeDetails[0])
 }

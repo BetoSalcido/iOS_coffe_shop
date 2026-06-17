@@ -16,11 +16,11 @@ struct CoffeeDetailView: View {
 
     init(
         coffee: Coffee,
-        catalogService: any CoffeeCatalogProviding,
+        coffeeDetailsService: any CoffeeDetailsProviding,
         orderService: any OrderProviding
     ) {
         self.orderService = orderService
-        _viewModel = State(wrappedValue: CoffeeDetailViewModel(service: catalogService, coffee: coffee))
+        _viewModel = State(wrappedValue: CoffeeDetailViewModel(service: coffeeDetailsService, coffee: coffee))
     }
 
     var body: some View {
@@ -48,16 +48,15 @@ struct CoffeeDetailView: View {
     }
 
     @ViewBuilder
-    private func detailContent(_ detail: Coffee) -> some View {
-        ZStack(alignment: .bottom) {
-            ScrollView {
-                CoffeeDetailHeaderView(coffee: detail)
-                CoffeeDetailBodyView(coffee: detail) {
-                    viewModel.handleCoffeeSizeSelectionWith($0)
-                }
+    private func detailContent(_ detail: CoffeeDetail) -> some View {
+        ScrollView {
+            CoffeeDetailHeaderView(coffee: detail)
+            CoffeeDetailBodyView(coffee: detail) {
+                viewModel.handleCoffeeSizeSelectionWith($0)
             }
-            .background(Color.init(hex: "#F9F9F9"))
-
+        }
+        .background(Color(hex: "#F9F9F9"))
+        .safeAreaInset(edge: .bottom) {
             CoffeeDetailFooterView(coffee: detail, onTap: {
                 showOrder = true
             })
@@ -68,8 +67,8 @@ struct CoffeeDetailView: View {
 #Preview {
     NavigationStack {
         CoffeeDetailView(
-            coffee: DeveloperPreview().coffees[0],
-            catalogService: AppServiceProvider.live.catalog,
+            coffee: DeveloperPreview().coffees[1],
+            coffeeDetailsService: AppServiceProvider.live.coffeeDetails,
             orderService: AppServiceProvider.live.order
         )
     }

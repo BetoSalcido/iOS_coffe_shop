@@ -12,6 +12,7 @@ SQL migrations for the iOS app.
 | 3 | `003_coffee_category.sql` | catalog | `coffees.category_id` FK + `is_all_filter` on categories |
 | 4 | `004_more_coffees.sql` | catalog | 7 additional coffees (12 total) |
 | 5 | `005_coffee_image_urls.sql` | catalog | Replace asset-name placeholders with HTTPS URLs (Kingfisher) |
+| 6 | `006_coffee_details.sql` | catalog | Detail copy + size options for the coffee detail screen |
 
 **Auth in Supabase:** you do **not** create `auth.users` manually. Supabase Auth creates it when the project is created. You only add **`public.profiles`** for app data (name, `is_pro`, etc.).
 
@@ -78,6 +79,50 @@ Fresh installs: `001_catalog.sql` and `004_more_coffees.sql` already seed Unspla
 For production, upload images to **Supabase Storage** and use URLs like:
 
 `https://YOUR_PROJECT_REF.supabase.co/storage/v1/object/public/coffee-images/{file}.jpg`
+
+## Coffee detail
+
+There is **no separate detail table**. The detail screen loads one row from `public.coffees` by UUID.
+
+### PostgREST (what the iOS app calls)
+
+```
+GET {SUPABASE_URL}/rest/v1/coffees?id=eq.{coffee_uuid}
+```
+
+Example (Coffee Panna):
+
+```
+GET .../rest/v1/coffees?id=eq.b2000001-0001-4001-8001-000000000001
+```
+
+### Fields mapped to `CoffeeDTO` → `Coffee`
+
+| DB column | iOS property | Detail screen usage |
+|-----------|--------------|---------------------|
+| `name` | `name` | Header title |
+| `description` | `description` | Header subtitle |
+| `long_description` | `longDescription` | Description section body |
+| `rating` | `rating` | Header rating badge |
+| `price` | `price` | Footer price |
+| `image_url` | `imageURL` | Header image (Kingfisher) |
+| `sizes` (jsonb) | `sizes` | Size picker chips |
+
+### `sizes` JSON format
+
+```json
+[
+  {"id": "1", "name": "Regular", "is_active": true},
+  {"id": "2", "name": "Extra Foam", "is_active": false}
+]
+```
+
+Set **`is_active: true`** on one size so the app pre-selects it (`CoffeeDetailViewModel`).
+
+### Seed / update
+
+- **Fresh install:** run `001_catalog.sql` (base rows), then **`006_coffee_details.sql`** for full detail copy and sizes.
+- **Existing database** with generic `S` / `M` / `L` sizes: run **`006_coffee_details.sql`** in the SQL Editor.
 
 ## 5. Orders (next)
 

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CoffeeDetailFooterView: View {
-    let coffee: Coffee
+    let coffee: CoffeeDetail
     let onTap: () -> Void
     
     var body: some View {
@@ -46,7 +46,7 @@ struct CoffeeDetailFooterView: View {
 }
 
 #Preview {
-    CoffeeDetailFooterView(coffee: DeveloperPreview().coffees[0]) {
+    CoffeeDetailFooterView(coffee: DeveloperPreview().coffeeDetails[0]) {
         print("Buy Button Tapped!")
     }
  }

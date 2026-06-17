@@ -20,9 +20,4 @@ final class CoffeeCatalogService: CoffeeCatalogProviding {
         }
         return allCoffees.filter { $0.categoryId == category.id }
     }
-
-    func fetchCoffeeDetail(_ coffeeId: String) async throws -> Coffee {
-        let coffees = DeveloperPreview().coffees
-        return coffees.first(where: { $0.id == coffeeId }) ?? coffees[0]
-    }
 }

@@ -8,12 +8,11 @@ import Foundation
 /// Supabase PostgREST routes for the catalog (`rest/v1`).
 enum CoffeeRouter: URLRequestConvertible {
     case fetchCoffees(categoryId: String?)
-    case fetchCoffee(id: String)
     case fetchCategories
 
     private var method: HTTPMethod {
         switch self {
-        case .fetchCoffees, .fetchCoffee, .fetchCategories:
+        case .fetchCoffees, .fetchCategories:
             return .get
         }
     }
@@ -39,14 +38,6 @@ enum CoffeeRouter: URLRequestConvertible {
                 }
                 url = built
             }
-
-        case .fetchCoffee(let id):
-            var components = URLComponents(string: base + "/coffees")
-            components?.queryItems = [URLQueryItem(name: "id", value: "eq.\(id)")]
-            guard let built = components?.url else {
-                throw NetworkingService.NetworkError.invalidURL
-            }
-            url = built
 
         case .fetchCategories:
             guard let built = URL(string: base + "/coffee_categories?order=sort_order.asc") else {

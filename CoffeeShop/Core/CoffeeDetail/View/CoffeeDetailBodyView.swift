@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CoffeeDetailBodyView: View {
-    let coffee: Coffee
+    let coffee: CoffeeDetail
     let onTap: (CoffeeSize) -> Void
     
     var body: some View {
@@ -39,7 +39,7 @@ struct CoffeeDetailBodyView: View {
 }
 
 #Preview {
-    CoffeeDetailBodyView(coffee: DeveloperPreview().coffees[0]) { _ in
+    CoffeeDetailBodyView(coffee: DeveloperPreview().coffeeDetails[0]) { _ in
         print("Size tapped!")
     }
 }
