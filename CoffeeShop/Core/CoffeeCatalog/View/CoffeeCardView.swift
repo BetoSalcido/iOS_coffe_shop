@@ -9,7 +9,14 @@ import SwiftUI
 
 struct CoffeeCardView: View {
     let coffee: Coffee
+    let isAddButtonVisible: Bool
     let onTap: () -> Void
+
+    init(coffee: Coffee, isAddButtonVisible: Bool = true, onTap: @escaping () -> Void) {
+        self.coffee = coffee
+        self.isAddButtonVisible = isAddButtonVisible
+        self.onTap = onTap
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: CatalogVisualMetrics.CoffeeCard.contentSpacing) {
@@ -51,16 +58,18 @@ struct CoffeeCardView: View {
 
                 Spacer(minLength: 0)
 
-                Button {
-                    print("Add Coffee!")
-                } label: {
-                    Image("AddIcon")
-                        .frame(
-                            width: CatalogVisualMetrics.CoffeeCard.addButtonSide,
-                            height: CatalogVisualMetrics.CoffeeCard.addButtonSide
-                        )
+                if (isAddButtonVisible) {
+                    Button {
+                        print("Add Coffee!")
+                    } label: {
+                        Image("AddIcon")
+                            .frame(
+                                width: CatalogVisualMetrics.CoffeeCard.addButtonSide,
+                                height: CatalogVisualMetrics.CoffeeCard.addButtonSide
+                            )
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
             .frame(minWidth: 0, maxWidth: .infinity)
         }

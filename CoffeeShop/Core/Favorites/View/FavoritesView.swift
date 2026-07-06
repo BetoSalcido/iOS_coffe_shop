@@ -45,7 +45,7 @@ struct FavoritesView: View {
                     emptyState
                 } else {
                     ScrollView {
-                        CatalogGridView(coffeeList: viewModel.coffees) { coffee in
+                        CatalogGridView(coffeeList: viewModel.coffees, isAddButtonVisible: false) { coffee in
                             viewModel.handleCoffeeSelectionWith(coffee)
                         }
                     }
