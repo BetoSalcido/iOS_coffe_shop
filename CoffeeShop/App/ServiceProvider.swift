@@ -13,6 +13,7 @@ protocol ServiceProvider: AnyObject {
     var order: any OrderProviding { get }
     var settings: any SettingsProviding { get }
     var auth: any AuthProviding { get }
+    var paymentMethods: any PaymentMethodsProviding { get }
 }
 
 final class AppServiceProvider: ServiceProvider {
@@ -23,7 +24,7 @@ final class AppServiceProvider: ServiceProvider {
     let order: any OrderProviding
     let settings: any SettingsProviding
     let auth: any AuthProviding
-
+    let paymentMethods: any PaymentMethodsProviding
     init(
         catalog: any CoffeeCatalogProviding = CoffeeCatalogService(),
         coffeeDetails: any CoffeeDetailsProviding = CoffeeDetailsService(),
@@ -31,7 +32,8 @@ final class AppServiceProvider: ServiceProvider {
         order: any OrderProviding = OrderService(),
         settings: any SettingsProviding = SettingsService(),
         sessionStore: any SessionStoring = KeychainSessionStore(),
-        auth: (any AuthProviding)? = nil
+        auth: (any AuthProviding)? = nil,
+        paymentMethods: (any PaymentMethodsProviding)? = nil
     ) {
         self.catalog = catalog
         self.coffeeDetails = coffeeDetails
@@ -39,6 +41,7 @@ final class AppServiceProvider: ServiceProvider {
         self.order = order
         self.settings = settings
         self.auth = auth ?? AuthService(sessionStore: sessionStore)
+        self.paymentMethods = paymentMethods ?? PaymentMethodsService()
     }
 
     static let live = AppServiceProvider()
@@ -53,13 +56,15 @@ final class AppServiceProvider: ServiceProvider {
         let catalog = RemoteCoffeeCatalogService(network: apiNetwork)
         let coffeeDetails = RemoteCoffeeDetailsService(network: apiNetwork)
         let favorites = RemoteFavoritesService(network: apiNetwork, sessionStore: sessionStore)
+        let paymentMethods = RemotePaymentMethodsService(network: apiNetwork, sessionStore: sessionStore)
 
         return AppServiceProvider(
             catalog: catalog,
             coffeeDetails: coffeeDetails,
             favorites: favorites,
             sessionStore: sessionStore,
-            auth: auth
+            auth: auth,
+            paymentMethods: paymentMethods
         )
     }
 }

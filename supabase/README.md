@@ -15,6 +15,7 @@ SQL migrations for the iOS app.
 | 6 | `006_coffee_details.sql` | catalog | Detail copy + size options for the coffee detail screen |
 | 7 | `007_coffee_modifiers.sql` | catalog | `modifiers` column + size labels per drink type |
 | 8 | `008_user_favorites.sql` | auth + catalog | `user_favorites` table (coffee IDs per user) |
+| 9 | `009_payment_methods.sql` | auth | Saved cards (`brand` + `last4` only; never PAN/CVV) |
 
 **Auth in Supabase:** you do **not** create `auth.users` manually. Supabase Auth creates it when the project is created. You only add **`public.profiles`** for app data (name, `is_pro`, etc.).
 
@@ -169,6 +170,35 @@ The app loads favorite IDs, then fetches catalog rows with `GET /coffees?id=in.(
 
 Run **`008_user_favorites.sql`** in the SQL Editor (requires sign-in for RLS).
 
+## Payment methods
+
+Authenticated users save **card metadata** in `public.payment_methods`.
+
+| Column | Purpose |
+|--------|---------|
+| `brand` | `visa` / `mastercard` / `amex` / `discover` / `unknown` |
+| `last4` | Last 4 digits only |
+| `cardholder_name` | Name on card |
+| `expiration_month` / `expiration_year` | Expiry |
+| `is_default` | At most one default per user (unique partial index) |
+
+**Never store** full card number or CVV in Supabase. The iOS form keeps them in memory only; the insert payload sends `brand` + `last4`.
+
+### PostgREST
+
+```
+GET    /rest/v1/payment_methods?select=id,brand,last4,cardholder_name,expiration_month,expiration_year,is_default&user_id=eq.{user_uuid}&order=is_default.desc,created_at.desc
+POST   /rest/v1/payment_methods
+       { "user_id", "brand", "last4", "cardholder_name", "expiration_month", "expiration_year", "is_default" }
+PATCH  /rest/v1/payment_methods?user_id=eq.{user_uuid}&is_default=eq.true
+       { "is_default": false }   -- clear current default before setting a new one
+PATCH  /rest/v1/payment_methods?id=eq.{method_uuid}&user_id=eq.{user_uuid}
+       { "is_default": true }
+DELETE /rest/v1/payment_methods?id=eq.{method_uuid}&user_id=eq.{user_uuid}
+```
+
+Run **`009_payment_methods.sql`** in the SQL Editor (requires sign-in for RLS).
+
 ## 5. Orders (next)
 
 Run `002_orders.sql` and wire `OrderService` to PostgREST.
@@ -181,6 +211,7 @@ Run `002_orders.sql` and wire `OrderService` to PostgREST.
 | `coffee_categories` | SELECT | SELECT |
 | `coffees` | SELECT | SELECT |
 | `user_favorites` | — | own rows only |
+| `payment_methods` | — | own rows only |
 | `orders` | — | own rows only |
 | `order_items` | — | own orders only |
 
