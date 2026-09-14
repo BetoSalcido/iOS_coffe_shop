@@ -62,4 +62,10 @@ extension Color {
     enum TabItem {
         static let color = Color("TabItemColor")
     }
+    
+    enum List {
+        static let background = Color("ListItemBackground")
+        static let activeBorder = Color("ListSelectedItemBorderColor")
+        static let inavtiveBorder = Color("ListUnSelectedItemBorderColor")
+    }
 }

@@ -78,7 +78,7 @@ struct SettingsView: View {
         case .editProfile:
             EditProfileView()
         case .paymentMethods:
-            PaymentMethodsView()
+            PaymentMethodsView(paymentMethodsService: serviceProvider.paymentMethods)
         case .orderHistory:
             OrderHistoryView()
         case .deliveryAddresses:

@@ -27,7 +27,6 @@ enum CardBrand: String, Codable, CaseIterable, Hashable {
     case visa
     case mastercard
     case amex
-    case discover
     case unknown
 
     var displayName: String {
@@ -35,7 +34,6 @@ enum CardBrand: String, Codable, CaseIterable, Hashable {
         case .visa: return "Visa"
         case .mastercard: return "Mastercard"
         case .amex: return "Amex"
-        case .discover: return "Discover"
         case .unknown: return "Card"
         }
     }
@@ -48,7 +46,6 @@ enum CardBrand: String, Codable, CaseIterable, Hashable {
         if let prefix = Int(cleaned.prefix(2)), (51...55).contains(prefix) {
             return .mastercard
         }
-        if cleaned.hasPrefix("6011") || cleaned.hasPrefix("65") { return .discover }
         return .unknown
     }
 }

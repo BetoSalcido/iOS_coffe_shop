@@ -8,7 +8,11 @@ import Foundation
 /// In-memory mock for previews and local development without Supabase.
 final class PaymentMethodsService: PaymentMethodsProviding {
 
-    private var methods: [PaymentMethod] = []
+    private var methods: [PaymentMethod]
+
+    init(methods: [PaymentMethod] = DeveloperPreview().paymentMethods) {
+        self.methods = methods
+    }
 
     func fetchPaymentMethods() async throws -> [PaymentMethod] {
         methods.sorted { lhs, rhs in

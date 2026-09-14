@@ -16,3 +16,18 @@ struct AddPaymentMethodView: View {
 #Preview {
     AddPaymentMethodView()
 }
+
+/// Design canvas — filled form values for AddPaymentMethodView layout.
+#Preview("Filled form data") {
+    let form = DeveloperPreview().filledNewPaymentMethodForm
+    Form {
+        LabeledContent("Name", value: form.cardholderName)
+        LabeledContent("Number", value: form.cardNumber)
+        LabeledContent("Brand", value: form.inferredBrand.displayName)
+        LabeledContent("Expiry", value: "\(form.expirationMonth)/\(form.expirationYear)")
+        LabeledContent("CVV", value: form.cvv)
+        LabeledContent("Default", value: form.setAsDefault ? "Yes" : "No")
+        LabeledContent("Last4", value: form.last4)
+    }
+    .navigationTitle("Add Payment Method")
+}
