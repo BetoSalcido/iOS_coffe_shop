@@ -8,13 +8,28 @@
 import SwiftUI
 
 struct AddPaymentMethodView: View {
+    private let paymentMethodsService: any PaymentMethodsProviding
+    @State private var viewModel: AddPaymentMethodViewModel
+
+    init(paymentMethodsService: any PaymentMethodsProviding) {
+        self.paymentMethodsService = paymentMethodsService
+        _viewModel = State(
+            wrappedValue: AddPaymentMethodViewModel(service: paymentMethodsService)
+        )
+    }
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Add Payment Method")
+            .navigationTitle("Add Payment Method")
+            .navigationBarTitleDisplayMode(.inline)
+            .blackNavigationBarStyle()
     }
 }
 
 #Preview {
-    AddPaymentMethodView()
+    NavigationStack {
+        AddPaymentMethodView(paymentMethodsService: AppServiceProvider.live.paymentMethods)
+    }
 }
 
 /// Design canvas — filled form values for AddPaymentMethodView layout.

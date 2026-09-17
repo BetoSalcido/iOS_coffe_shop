@@ -7,6 +7,7 @@ import SwiftUI
 
 struct PaymentMethodsView: View {
     @State private var viewModel: PaymentMethodsViewModel
+    @State private var showAddPaymentMethod = false
     
     private let paymentMethodsService: any PaymentMethodsProviding
     
@@ -48,19 +49,38 @@ struct PaymentMethodsView: View {
         .navigationTitle("Payment Methods")
         .navigationBarTitleDisplayMode(.inline)
         .blackNavigationBarStyle()
+        .navigationDestination(isPresented: $showAddPaymentMethod) {
+            AddPaymentMethodView(paymentMethodsService: paymentMethodsService)
+        }
     }
     
     @ViewBuilder
     private func detailContent(_ paymentMethods: [PaymentMethod]) -> some View {
         ScrollView {
-            VStack(spacing: 15) {
+            VStack(alignment: .leading, spacing: 15) {
+                PaymentMethodHeaderView()
+                
+                Text("Tus Tarjetas")
+                    .font(.headline)
+                
                 ForEach(paymentMethods) { item in
-                    PaymentMethodItem(paymentMethod: item)
+                    PaymentMethodItem(paymentMethod: item) {
+                        viewModel.handleSelectDefault(item)
+                    }
                 }
             }
             .padding(.horizontal, 16)
+            .padding(.bottom, 8)
         }
         .background(Color(hex: "#F9F9F9"))
+        .safeAreaInset(edge: .bottom) {
+            PaymentMethodFooterView(onTap: {
+                showAddPaymentMethod = true
+            })
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(Color(hex: "#F9F9F9"))
+        }
     }
 }
 

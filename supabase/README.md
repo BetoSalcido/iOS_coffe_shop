@@ -16,6 +16,7 @@ SQL migrations for the iOS app.
 | 7 | `007_coffee_modifiers.sql` | catalog | `modifiers` column + size labels per drink type |
 | 8 | `008_user_favorites.sql` | auth + catalog | `user_favorites` table (coffee IDs per user) |
 | 9 | `009_payment_methods.sql` | auth | Saved cards (`brand` + `last4` only; never PAN/CVV) |
+| 10 | `010_payment_methods_seed.sql` | auth + 009 | Demo cards for a signed-in user (replace email) |
 
 **Auth in Supabase:** you do **not** create `auth.users` manually. Supabase Auth creates it when the project is created. You only add **`public.profiles`** for app data (name, `is_pro`, etc.).
 
@@ -198,6 +199,24 @@ DELETE /rest/v1/payment_methods?id=eq.{method_uuid}&user_id=eq.{user_uuid}
 ```
 
 Run **`009_payment_methods.sql`** in the SQL Editor (requires sign-in for RLS).
+
+### Seed demo cards (`010_payment_methods_seed.sql`)
+
+Because `user_id` must exist in `auth.users`, seed **after** you sign up in the app:
+
+1. Open **Authentication → Users** and copy your email.
+2. Open `010_payment_methods_seed.sql`, replace `YOUR_EMAIL@example.com` with that email.
+3. SQL Editor → paste → **Run**.
+
+Inserts 3 cards (same IDs as `DeveloperPreview`):
+
+| Brand | Last4 | Default |
+|-------|-------|---------|
+| Visa | 4242 | yes |
+| Mastercard | 4444 | no |
+| Amex | 0005 | no |
+
+Then in the app use `AppServiceProvider.liveWithSupabase()` and open **Payment Methods** while logged in.
 
 ## 5. Orders (next)
 

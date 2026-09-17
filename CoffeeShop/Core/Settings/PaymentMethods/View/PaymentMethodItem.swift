@@ -9,10 +9,11 @@ import SwiftUI
 
 struct PaymentMethodItem: View {
     
-    var paymentMethod: PaymentMethod
+    let paymentMethod: PaymentMethod
+    let onTap: () -> Void
     
-    var paymentMethodImage: Image {
-        return switch paymentMethod.brand {
+    private var paymentMethodImage: Image {
+        switch paymentMethod.brand {
         case .visa:
             Image("VisaIcon")
         case .mastercard:
@@ -25,48 +26,51 @@ struct PaymentMethodItem: View {
     }
     
     var body: some View {
-        HStack(spacing: 20) {
-            paymentMethodImage
-                .frame(width: 50, height: 30)
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(paymentMethod.displayName)
-                    .font(.title3)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.black)
+        Button(action: onTap) {
+            HStack(spacing: 20) {
+                paymentMethodImage
+                    .frame(width: 50, height: 30)
                 
-                Text("Expira: \(paymentMethod.formattedExpiration)")
-                    .font(.title3)
-                    .foregroundStyle(.gray)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(paymentMethod.displayName)
+                        .font(.callout)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.black)
+                    
+                    Text("Expira: \(paymentMethod.formattedExpiration)")
+                        .font(.callout)
+                        .foregroundStyle(.gray)
+                }
+                
+                Spacer(minLength: 0)
+                
+                if paymentMethod.isDefault {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundStyle(.green)
+                }
             }
-            
-            Spacer(minLength: 0)
-            
-            if paymentMethod.isDefault {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundStyle(.green)
-            }
+            .frame(maxWidth: .infinity, minHeight: 40)
+            .padding(16)
+            .background(Color.List.background)
+            .clipShape(RoundedRectangle(cornerRadius: 15))
+            .overlay(
+                RoundedRectangle(cornerRadius: 15)
+                    .stroke(
+                        paymentMethod.isDefault
+                            ? Color.List.activeBorder
+                            : Color.List.inavtiveBorder,
+                        lineWidth: paymentMethod.isDefault ? 1.5 : 1.0
+                    )
+            )
         }
-        .frame(maxWidth: .infinity, maxHeight: 76)
-        .padding(16)
-        .background(Color.List.background)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .overlay(
-            RoundedRectangle(cornerRadius: 15)
-                .stroke(
-                    paymentMethod.isDefault
-                        ? Color.List.activeBorder
-                        : Color.List.inavtiveBorder,
-                    lineWidth: paymentMethod.isDefault ? 1.5 : 1.0
-                )
-        )
+        .buttonStyle(.plain)
     }
 }
 
 #Preview {
     VStack(spacing: 12) {
-        PaymentMethodItem(paymentMethod: DeveloperPreview().paymentMethods[0])
-        PaymentMethodItem(paymentMethod: DeveloperPreview().paymentMethods[1])
+        PaymentMethodItem(paymentMethod: DeveloperPreview().paymentMethods[0], onTap: {})
+        PaymentMethodItem(paymentMethod: DeveloperPreview().paymentMethods[1], onTap: {})
     }
     .padding(.horizontal)
 }

@@ -10,5 +10,9 @@ import Observation
 
 @Observable @MainActor
 final class AddPaymentMethodViewModel {
-}
+    private let service: any PaymentMethodsProviding
 
+    init(service: any PaymentMethodsProviding) {
+        self.service = service
+    }
+}
