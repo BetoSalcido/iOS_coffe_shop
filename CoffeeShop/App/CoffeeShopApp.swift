@@ -15,16 +15,10 @@ struct CoffeeShopApp: App {
     var body: some Scene {
         WindowGroup {
             RootView(serviceProvider: serviceProvider)
-                .onChange(of: scenePhase) { oldValue, newValue in
-                    switch newValue {
-                    case .active:
-                        print("App in foreground!")
-                    case .background:
-                        print("App in background!")
-                    case .inactive:
-                        print("App inactive!")
-                    @unknown default:
-                        print("error...")
+                .onChange(of: scenePhase) { _, newValue in
+                    guard newValue == .active else { return }
+                    Task {
+                        try? await serviceProvider.auth.refreshSessionIfNeeded()
                     }
                 }
         }
