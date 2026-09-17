@@ -17,5 +17,7 @@ protocol AuthProviding: AnyObject {
     ) async throws -> AuthSession
     func signInWithGoogle() async throws -> AuthSession
     func signInWithApple() async throws -> AuthSession
+    /// Renews the access token when it is expired (or about to). Clears Keychain if refresh fails.
+    func refreshSessionIfNeeded() async throws
     func signOut() throws
 }

@@ -10,6 +10,8 @@ final class RemoteAuthService: AuthProviding {
 
     private let network: any NetworkProviding
     private let sessionStore: any SessionStoring
+    /// Serializes concurrent refresh calls (launch + foreground).
+    private var refreshTask: Task<Void, Error>?
 
     init(
         network: any NetworkProviding,
@@ -76,6 +78,20 @@ final class RemoteAuthService: AuthProviding {
         throw AuthError.socialSignInNotSupported
     }
 
+    func refreshSessionIfNeeded() async throws {
+        if let refreshTask {
+            try await refreshTask.value
+            return
+        }
+
+        let task = Task<Void, Error> {
+            try await self.performRefreshIfNeeded()
+        }
+        refreshTask = task
+        defer { refreshTask = nil }
+        try await task.value
+    }
+
     func signOut() throws {
         try sessionStore.clear()
     }
@@ -84,19 +100,55 @@ final class RemoteAuthService: AuthProviding {
 // MARK: - Private Methods
 private extension RemoteAuthService {
 
+    func performRefreshIfNeeded() async throws {
+        guard let session = sessionStore.load() else { return }
+        guard session.shouldRefreshAccessToken else { return }
+
+        guard let refreshToken = session.refreshToken, !refreshToken.isEmpty else {
+            try sessionStore.clear()
+            throw AuthError.sessionExpired
+        }
+
+        do {
+            _ = try await authenticate(
+                router: .refresh(refreshToken: refreshToken),
+                fullNameFallback: session.fullName
+            )
+        } catch {
+            try? sessionStore.clear()
+            throw AuthError.sessionExpired
+        }
+    }
+
     func authenticate(router: AuthRouter, fullNameFallback: String?) async throws -> AuthSession {
         do {
             let dto: AuthSessionDTO = try await network.request(AuthSessionDTO.self, router: router)
             var session = try dto.toDomain()
-            if session.fullName == nil, let fullNameFallback {
+
+            if case .refresh = router, let existing = sessionStore.load() {
+                // Refresh payloads may omit `user`; keep identity from the stored session.
+                session = AuthSession(
+                    id: dto.user?.id ?? existing.id,
+                    email: {
+                        if let email = dto.user?.email, !email.isEmpty { return email }
+                        return existing.email
+                    }(),
+                    fullName: session.fullName ?? existing.fullName ?? fullNameFallback,
+                    accessToken: session.accessToken,
+                    refreshToken: session.refreshToken ?? existing.refreshToken,
+                    expiresAt: session.expiresAt
+                )
+            } else if session.fullName == nil, let fullNameFallback {
                 session = AuthSession(
                     id: session.id,
                     email: session.email,
                     fullName: fullNameFallback,
                     accessToken: session.accessToken,
-                    refreshToken: session.refreshToken
+                    refreshToken: session.refreshToken,
+                    expiresAt: session.expiresAt
                 )
             }
+
             try sessionStore.save(session)
             return session
         } catch let error as AuthError {

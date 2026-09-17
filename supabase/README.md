@@ -60,6 +60,30 @@ Remove `http://localhost:3000` from Site URL and Redirect URLs unless you run a 
 
 For iOS-only development, disabling **Confirm email** (step 3 above) avoids this flow entirely.
 
+## Session refresh (access + refresh tokens)
+
+Supabase returns both tokens on login/signup. The iOS app stores them in Keychain (`AuthSession`) with `expiresAt` from `expires_in`.
+
+| Token | Lifetime (typical) | Stored? | Used for |
+|-------|--------------------|---------|----------|
+| `access_token` | ~1 hour | yes | `Authorization: Bearer …` on PostgREST |
+| `refresh_token` | long-lived | yes | Renew access when expired |
+
+### PostgREST Auth
+
+```
+POST /auth/v1/token?grant_type=refresh_token
+{ "refresh_token": "…" }
+```
+
+Same response shape as password grant (`access_token`, `refresh_token`, `expires_in`, `user`).
+
+The app calls `AuthProviding.refreshSessionIfNeeded()`:
+- after splash (before entering main)
+- when the app returns to foreground
+
+If refresh fails, Keychain is cleared and the user is sent to Login.
+
 ## Catalog categories
 
 Each coffee belongs to one **real** category (`category_id` FK). The **All Coffee** tab is special: `coffee_categories.is_all_filter = true` tells the app to load every coffee without filtering.

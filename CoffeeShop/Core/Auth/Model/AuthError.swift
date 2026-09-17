@@ -12,6 +12,7 @@ enum AuthError: LocalizedError {
     case passwordMismatch
     case emailConfirmationRequired
     case socialSignInNotSupported
+    case sessionExpired
     case server(message: String)
 
     var errorDescription: String? {
@@ -28,6 +29,8 @@ enum AuthError: LocalizedError {
             return "Check your email to confirm your account before signing in."
         case .socialSignInNotSupported:
             return "Social sign-in is not available yet."
+        case .sessionExpired:
+            return "Your session expired. Please sign in again."
         case .server(let message):
             return message
         }

@@ -31,12 +31,20 @@ extension AuthSessionDTO {
             throw AuthError.emailConfirmationRequired
         }
 
+        let expiresAt: Date?
+        if let expiresIn, expiresIn > 0 {
+            expiresAt = Date().addingTimeInterval(TimeInterval(expiresIn))
+        } else {
+            expiresAt = nil
+        }
+
         return AuthSession(
             id: user?.id ?? UUID().uuidString,
             email: user?.email ?? "",
             fullName: user?.userMetadata?.fullName,
             accessToken: accessToken,
-            refreshToken: refreshToken
+            refreshToken: refreshToken,
+            expiresAt: expiresAt
         )
     }
 }

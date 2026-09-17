@@ -9,11 +9,14 @@ import Foundation
 enum AuthRouter: URLRequestConvertible {
     case signIn(email: String, password: String)
     case signUp(email: String, password: String, fullName: String)
+    case refresh(refreshToken: String)
 
     private var path: String {
         switch self {
         case .signIn:
             return "/token?grant_type=password"
+        case .refresh:
+            return "/token?grant_type=refresh_token"
         case .signUp:
             return "/signup"
         }
@@ -21,7 +24,7 @@ enum AuthRouter: URLRequestConvertible {
 
     private var method: HTTPMethod {
         switch self {
-        case .signIn, .signUp:
+        case .signIn, .signUp, .refresh:
             return .post
         }
     }
@@ -40,6 +43,12 @@ enum AuthRouter: URLRequestConvertible {
                 "email": email,
                 "password": password,
                 "data": ["full_name": fullName]
+            ]
+            return try? JSONSerialization.data(withJSONObject: payload)
+
+        case .refresh(let refreshToken):
+            let payload: [String: String] = [
+                "refresh_token": refreshToken
             ]
             return try? JSONSerialization.data(withJSONObject: payload)
         }

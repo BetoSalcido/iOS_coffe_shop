@@ -38,7 +38,19 @@ struct RootView: View {
         .task(id: screen) {
             guard screen == .splash else { return }
             try? await Task.sleep(for: splashDuration)
-            screen = serviceProvider.auth.isLoggedIn ? .main : .login
+            screen = await resolvePostSplashScreen()
+        }
+    }
+
+    /// Refreshes an expired access token before entering the main app.
+    private func resolvePostSplashScreen() async -> AppScreen {
+        guard serviceProvider.auth.isLoggedIn else { return .login }
+
+        do {
+            try await serviceProvider.auth.refreshSessionIfNeeded()
+            return serviceProvider.auth.isLoggedIn ? .main : .login
+        } catch {
+            return .login
         }
     }
 }

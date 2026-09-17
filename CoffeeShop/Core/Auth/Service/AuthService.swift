@@ -37,7 +37,8 @@ final class AuthService: AuthProviding {
             email: trimmedEmail,
             fullName: nil,
             accessToken: "mock-local",
-            refreshToken: nil
+            refreshToken: nil,
+            expiresAt: nil
         )
         try sessionStore.save(session)
         return session
@@ -72,7 +73,8 @@ final class AuthService: AuthProviding {
             email: trimmedEmail,
             fullName: trimmedName,
             accessToken: "mock-local",
-            refreshToken: nil
+            refreshToken: nil,
+            expiresAt: nil
         )
         try sessionStore.save(session)
         return session
@@ -84,6 +86,10 @@ final class AuthService: AuthProviding {
 
     func signInWithApple() async throws -> AuthSession {
         try await signInWithSocial(email: "apple.user@example.com")
+    }
+
+    func refreshSessionIfNeeded() async throws {
+        // Mock tokens do not expire.
     }
 
     func signOut() throws {
@@ -101,7 +107,8 @@ private extension AuthService {
             email: email,
             fullName: nil,
             accessToken: "mock-local",
-            refreshToken: nil
+            refreshToken: nil,
+            expiresAt: nil
         )
         try sessionStore.save(session)
         return session
