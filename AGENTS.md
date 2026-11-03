@@ -169,4 +169,8 @@ Only needed when a task starts from a Figma design. Everything else works withou
 
 ## Memory
 
-Update `MEMORY.md` when a task changes something the next agent needs to know: a decision, a new feature's status, a workaround, or a gap that was closed. Remove entries that are no longer true. Do not log routine work.
+- At the start of a task, read `MEMORY.md` for the project state and the decisions already made.
+- When the task is done, update it: current state, important decisions (with why), and mistakes to avoid.
+- Keep it short, about 50 lines at most. Summarize or delete anything that no longer helps.
+- If something becomes a permanent rule, propose moving it into `AGENTS.md` instead of leaving it in memory.
+- Never store sensitive data: keys, tokens, or personal data.
