@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Removes Cursor co-author trailers that the agent appends automatically.
+# Enable once per clone: git config core.hooksPath .githooks
+
+msg_file="$1"
+tmp_file="$(mktemp)"
+
+grep -viE '^co-authored-by:.*(cursor|cursoragent@cursor\.com)' "$msg_file" > "$tmp_file"
+
+# Drop trailing blank lines left behind by the removed trailer.
+awk '{ lines[NR] = $0 } END { n = NR; while (n > 0 && lines[n] ~ /^[[:space:]]*$/) n--; for (i = 1; i <= n; i++) print lines[i] }' "$tmp_file" > "$msg_file"
+rm -f "$tmp_file"
+
+if grep -qiE '^co-authored-by:.*cursor' "$msg_file"; then
+    echo "commit-msg: Cursor co-author trailer is not allowed." >&2
+    exit 1
+fi
