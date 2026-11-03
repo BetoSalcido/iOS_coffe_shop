@@ -2,7 +2,7 @@
 
 Persistent project state for agents. Read at the start of a task; update when a decision or status changes. Keep entries short and current, and delete what is no longer true.
 
-Last reviewed: 2026-11-02
+Last reviewed: 2026-11-03
 
 ## Decisions
 
@@ -14,6 +14,7 @@ Last reviewed: 2026-11-02
 - Payment methods store `brand` + `last4` only.
 - Coffee images are public HTTPS URLs loaded with Kingfisher, not asset names.
 - Commits use Conventional Commits from 2026-11-02 on (see "Commits" in `AGENTS.md`). Earlier history uses plain sentences; do not rewrite it.
+- New features follow `.cursor/skills/feature-creation-skill/SKILL.md`. A screen starts from a Figma frame URL (`get_design_context`); the response is a visual reference, not code to paste. Fill **Feature notes** there when a decision is feature-specific and not yet a permanent rule.
 
 ## Feature status
 
