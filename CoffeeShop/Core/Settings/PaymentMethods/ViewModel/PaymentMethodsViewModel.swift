@@ -64,6 +64,13 @@ extension PaymentMethodsViewModel {
             await load()
         }
     }
+
+    /// Reloads the list without replacing it with the full-screen loader.
+    func handleRefresh() {
+        Task {
+            await fetchPaymentMethods()
+        }
+    }
     
     /// Selects a card as default. Updates UI immediately, then persists via the service.
     func handleSelectDefault(_ method: PaymentMethod) {

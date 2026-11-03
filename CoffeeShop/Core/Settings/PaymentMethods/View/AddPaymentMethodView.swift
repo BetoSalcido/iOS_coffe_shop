@@ -2,27 +2,54 @@
 //  AddPaymentMethodView.swift
 //  CoffeeShop
 //
-//  Created by Beto Salcido on 06/07/26.
-//
 
 import SwiftUI
 
 struct AddPaymentMethodView: View {
-    private let paymentMethodsService: any PaymentMethodsProviding
+    @Environment(\.dismiss) private var dismiss
     @State private var viewModel: AddPaymentMethodViewModel
 
-    init(paymentMethodsService: any PaymentMethodsProviding) {
-        self.paymentMethodsService = paymentMethodsService
+    init(
+        paymentMethodsService: any PaymentMethodsProviding,
+        form: NewPaymentMethodForm = NewPaymentMethodForm(setAsDefault: true)
+    ) {
         _viewModel = State(
-            wrappedValue: AddPaymentMethodViewModel(service: paymentMethodsService)
+            wrappedValue: AddPaymentMethodViewModel(
+                service: paymentMethodsService,
+                form: form
+            )
         )
     }
 
     var body: some View {
-        Text("Add Payment Method")
-            .navigationTitle("Add Payment Method")
-            .navigationBarTitleDisplayMode(.inline)
-            .blackNavigationBarStyle()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                AddPaymentMethodHeaderView()
+                AddPaymentMethodCardView(form: viewModel.form)
+                AddPaymentMethodFormView(viewModel: viewModel)
+                AddPaymentMethodSecurityBanner()
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 24)
+        }
+        .background(Color.Background.appBackground)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(false)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("Add Payment Method")
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(Color.Payment.brand)
+            }
+        }
+        .toolbarBackground(Color.Background.appBackground, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .tint(Color.Payment.brand)
+        .onChange(of: viewModel.didSave) { _, didSave in
+            if didSave {
+                dismiss()
+            }
+        }
     }
 }
 
@@ -32,17 +59,18 @@ struct AddPaymentMethodView: View {
     }
 }
 
-/// Design canvas — filled form values for AddPaymentMethodView layout.
-#Preview("Filled form data") {
-    let form = DeveloperPreview().filledNewPaymentMethodForm
-    Form {
-        LabeledContent("Name", value: form.cardholderName)
-        LabeledContent("Number", value: form.cardNumber)
-        LabeledContent("Brand", value: form.inferredBrand.displayName)
-        LabeledContent("Expiry", value: "\(form.expirationMonth)/\(form.expirationYear)")
-        LabeledContent("CVV", value: form.cvv)
-        LabeledContent("Default", value: form.setAsDefault ? "Yes" : "No")
-        LabeledContent("Last4", value: form.last4)
+#Preview("Filled form") {
+    NavigationStack {
+        AddPaymentMethodView(
+            paymentMethodsService: AppServiceProvider.live.paymentMethods,
+            form: DeveloperPreview().filledNewPaymentMethodForm
+        )
     }
-    .navigationTitle("Add Payment Method")
+}
+
+#Preview("Dark") {
+    NavigationStack {
+        AddPaymentMethodView(paymentMethodsService: AppServiceProvider.live.paymentMethods)
+    }
+    .preferredColorScheme(.dark)
 }

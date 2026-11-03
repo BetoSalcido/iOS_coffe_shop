@@ -24,7 +24,7 @@ Last reviewed: 2026-11-03
 | Catalog | `CoffeeCatalogService` | `RemoteCoffeeCatalogService` | Done |
 | Coffee detail | `CoffeeDetailsService` | `RemoteCoffeeDetailsService` | Done |
 | Favorites | `FavoritesService` | `RemoteFavoritesService` | Done |
-| Payment methods | `PaymentMethodsService` | `RemotePaymentMethodsService` | List done. `AddPaymentMethodView` form is a placeholder. |
+| Payment methods | `PaymentMethodsService` | `RemotePaymentMethodsService` | List and Add Payment Method UI done. Add saves `brand` + `last4` only. |
 | Order (cart) | `OrderService` | None | UI done. `handlePlaceOrder` is a TODO. `002_orders.sql` exists but is not wired. |
 | Settings | `SettingsService` | None | Done |
 | Checkout | None | None | Placeholder, not reachable from navigation |

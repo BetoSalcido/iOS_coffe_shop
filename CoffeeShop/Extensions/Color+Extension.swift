@@ -68,4 +68,21 @@ extension Color {
         static let activeBorder = Color("ListSelectedItemBorderColor")
         static let inavtiveBorder = Color("ListUnSelectedItemBorderColor")
     }
+
+    /// Add Payment Method frame (light and dark).
+    enum Payment {
+        static let brand = Color("PaymentBrand")
+        static let button = Color("PaymentButton")
+        static let subtitle = Color("PaymentSubtitle")
+        static let placeholder = Color("PaymentPlaceholder")
+        static let fieldFill = Color("PaymentFieldFill")
+        static let fieldBorder = Color("PaymentFieldBorder")
+        static let cardStart = Color("PaymentCardStart")
+        static let cardEnd = Color("PaymentCardEnd")
+        static let cardLabel = Color("PaymentCardLabel")
+        static let surface = Color("PaymentSurface")
+        static let bannerFill = Color("PaymentBannerFill")
+        static let bannerText = Color("PaymentBannerText")
+        static let bannerBorder = Color("PaymentBannerBorder")
+    }
 }

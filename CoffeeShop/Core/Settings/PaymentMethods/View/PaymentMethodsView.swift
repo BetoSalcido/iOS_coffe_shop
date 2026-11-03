@@ -52,6 +52,11 @@ struct PaymentMethodsView: View {
         .navigationDestination(isPresented: $showAddPaymentMethod) {
             AddPaymentMethodView(paymentMethodsService: paymentMethodsService)
         }
+        .onChange(of: showAddPaymentMethod) { _, isShowing in
+            if !isShowing {
+                viewModel.handleRefresh()
+            }
+        }
     }
     
     @ViewBuilder
