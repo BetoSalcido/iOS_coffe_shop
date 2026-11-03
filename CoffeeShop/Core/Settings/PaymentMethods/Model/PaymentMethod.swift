@@ -19,7 +19,11 @@ struct PaymentMethod: Identifiable, Hashable {
     }
 
     var formattedExpiration: String {
-        String(format: "%02d/%02d", expirationMonth, expirationYear % 100)
+        String(
+            format: "%02d/%02d",
+            expirationMonth,
+            expirationYear % CardFormLimit.twoDigitYearBoundary
+        )
     }
 }
 
@@ -38,12 +42,18 @@ enum CardBrand: String, Codable, CaseIterable, Hashable {
         }
     }
 
-    /// Best-effort brand from digits (demo / local validation only).
+    /// Brand from the PAN prefix. Length and Luhn are checked separately in `CardFormLimit`.
     static func infer(fromCardNumber digits: String) -> CardBrand {
         let cleaned = digits.filter(\.isNumber)
-        if cleaned.hasPrefix("4") { return .visa }
-        if cleaned.hasPrefix("34") || cleaned.hasPrefix("37") { return .amex }
-        if let prefix = Int(cleaned.prefix(2)), (51...55).contains(prefix) {
+        if CardFormLimit.amexPrefixes.contains(where: cleaned.hasPrefix) { return .amex }
+        if cleaned.hasPrefix(CardFormLimit.visaPrefix) { return .visa }
+        if let twoDigit = Int(cleaned.prefix(2)),
+           CardFormLimit.mastercardTwoDigitPrefix.contains(twoDigit) {
+            return .mastercard
+        }
+        if cleaned.count >= 4,
+           let fourDigit = Int(cleaned.prefix(4)),
+           CardFormLimit.mastercardFourDigitPrefix.contains(fourDigit) {
             return .mastercard
         }
         return .unknown

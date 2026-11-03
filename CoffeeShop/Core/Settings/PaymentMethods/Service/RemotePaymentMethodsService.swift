@@ -26,7 +26,7 @@ final class RemotePaymentMethodsService: PaymentMethodsProviding {
 
     func addPaymentMethod(_ form: NewPaymentMethodForm) async throws {
         let userId = try requireUserId()
-        try validate(form)
+        try form.validate()
 
         if form.setAsDefault {
             try await network.perform(PaymentMethodsRouter.clearDefault(userId: userId))
@@ -36,9 +36,9 @@ final class RemotePaymentMethodsService: PaymentMethodsProviding {
             userId: userId,
             brand: form.inferredBrand.rawValue,
             last4: form.last4,
-            cardholderName: form.cardholderName.trimmingCharacters(in: .whitespacesAndNewlines),
-            expirationMonth: Int(form.expirationMonth) ?? 1,
-            expirationYear: normalizedYear(form.expirationYear),
+            cardholderName: form.trimmedCardholderName,
+            expirationMonth: form.expirationMonthNumber,
+            expirationYear: form.normalizedExpirationYear,
             isDefault: form.setAsDefault
         )
         try await network.perform(PaymentMethodsRouter.addMethod(payload))
@@ -60,31 +60,5 @@ final class RemotePaymentMethodsService: PaymentMethodsProviding {
             throw PaymentMethodsError.notAuthenticated
         }
         return userId
-    }
-
-    private func validate(_ form: NewPaymentMethodForm) throws {
-        let name = form.cardholderName.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !name.isEmpty else { throw PaymentMethodFormError.missingCardholderName }
-
-        let digits = form.digitsOnlyCardNumber
-        guard (13...19).contains(digits.count) else { throw PaymentMethodFormError.invalidCardNumber }
-
-        guard let month = Int(form.expirationMonth), (1...12).contains(month) else {
-            throw PaymentMethodFormError.invalidExpiration
-        }
-        let year = normalizedYear(form.expirationYear)
-        guard year >= Calendar.current.component(.year, from: Date()) - 1 else {
-            throw PaymentMethodFormError.invalidExpiration
-        }
-
-        let cvvDigits = form.cvv.filter(\.isNumber)
-        let expectedCVVLength = form.inferredBrand == .amex ? 4 : 3
-        guard cvvDigits.count == expectedCVVLength else { throw PaymentMethodFormError.invalidCVV }
-    }
-
-    private func normalizedYear(_ raw: String) -> Int {
-        let digits = raw.filter(\.isNumber)
-        guard let value = Int(digits) else { return 0 }
-        return value < 100 ? 2000 + value : value
     }
 }

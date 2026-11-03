@@ -44,7 +44,7 @@ extension DeveloperPreview {
     var filledNewPaymentMethodForm: NewPaymentMethodForm {
         NewPaymentMethodForm(
             cardholderName: "Beto Salcido",
-            cardNumber: "4242 4242 4242 4242",
+            cardNumber: "4242424242424242",
             expirationMonth: "12",
             expirationYear: "28",
             cvv: "123",

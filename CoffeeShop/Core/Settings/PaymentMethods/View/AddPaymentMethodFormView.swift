@@ -12,17 +12,19 @@ struct AddPaymentMethodFormView: View {
         VStack(alignment: .leading, spacing: 24) {
             field(title: "Cardholder Name") {
                 textField(
-                    placeholder: "e.g. Julian V. Roaster",
-                    text: $viewModel.form.cardholderName,
-                    capitalization: .words
+                    placeholder: "e.g. Julian Roaster",
+                    text: cardholderNameBinding,
+                    sanitize: sanitizedCardholderName,
+                    capitalizesWords: true
                 )
             }
 
             field(title: "Card Number") {
                 textField(
-                    placeholder: "0000 0000 0000 0000",
+                    placeholder: "0000000000000000",
                     text: cardNumberBinding,
                     keyboard: .numberPad,
+                    sanitize: sanitizedCardNumber,
                     leading: "CardFieldIcon"
                 )
             }
@@ -32,7 +34,8 @@ struct AddPaymentMethodFormView: View {
                     textField(
                         placeholder: "MM/YY",
                         text: expirationBinding,
-                        keyboard: .numberPad
+                        keyboard: .numberPad,
+                        sanitize: sanitizedExpiration
                     )
                 }
                 field(title: "CVV") {
@@ -41,6 +44,7 @@ struct AddPaymentMethodFormView: View {
                         text: cvvBinding,
                         keyboard: .numberPad,
                         isSecure: true,
+                        sanitize: sanitizedCVV,
                         trailing: "CVVHelpIcon"
                     )
                 }
@@ -56,6 +60,13 @@ struct AddPaymentMethodFormView: View {
 
             addCardButton
         }
+    }
+
+    private var cardholderNameBinding: Binding<String> {
+        Binding(
+            get: { viewModel.form.cardholderName },
+            set: { viewModel.handleCardholderNameChanged($0) }
+        )
     }
 
     private var cardNumberBinding: Binding<String> {
@@ -77,6 +88,30 @@ struct AddPaymentMethodFormView: View {
             get: { viewModel.form.cvv },
             set: { viewModel.handleCVVChanged($0) }
         )
+    }
+
+    private func sanitizedCardholderName(_ raw: String) -> String {
+        var copy = viewModel.form
+        copy.updateCardholderName(raw)
+        return copy.cardholderName
+    }
+
+    private func sanitizedCardNumber(_ raw: String) -> String {
+        var copy = viewModel.form
+        copy.updateCardNumber(raw)
+        return copy.cardNumber
+    }
+
+    private func sanitizedExpiration(_ raw: String) -> String {
+        var copy = viewModel.form
+        copy.updateExpiration(raw)
+        return copy.expirationInput
+    }
+
+    private func sanitizedCVV(_ raw: String) -> String {
+        var copy = viewModel.form
+        copy.updateCVV(raw)
+        return copy.cvv
     }
 
     private var saveToggle: some View {
@@ -126,7 +161,8 @@ struct AddPaymentMethodFormView: View {
             .shadow(color: .black.opacity(0.1), radius: 12, y: 6)
         }
         .buttonStyle(.plain)
-        .disabled(viewModel.isSaving)
+        .disabled(!viewModel.canSubmit)
+        .opacity(viewModel.canSubmit ? 1 : 0.45)
     }
 
     private func field<Content: View>(
@@ -147,7 +183,8 @@ struct AddPaymentMethodFormView: View {
         text: Binding<String>,
         keyboard: UIKeyboardType = .default,
         isSecure: Bool = false,
-        capitalization: TextInputAutocapitalization = .never,
+        sanitize: @escaping (String) -> String,
+        capitalizesWords: Bool = false,
         leading: String? = nil,
         trailing: String? = nil
     ) -> some View {
@@ -159,26 +196,17 @@ struct AddPaymentMethodFormView: View {
                     .accessibilityHidden(true)
             }
 
-            Group {
-                if isSecure {
-                    SecureField(
-                        "",
-                        text: text,
-                        prompt: Text(placeholder).foregroundStyle(Color.Payment.placeholder)
-                    )
-                } else {
-                    TextField(
-                        "",
-                        text: text,
-                        prompt: Text(placeholder).foregroundStyle(Color.Payment.placeholder)
-                    )
-                    .textInputAutocapitalization(capitalization)
-                    .autocorrectionDisabled()
-                }
-            }
-            .keyboardType(keyboard)
-            .font(.callout)
-            .foregroundStyle(Color.Text.title)
+            AppTextField(
+                text: text,
+                placeholder: placeholder,
+                keyboardType: keyboard,
+                isSecure: isSecure,
+                autocapitalization: capitalizesWords ? .words : .none,
+                tint: Color.Payment.brand,
+                placeholderColor: Color.Payment.placeholder,
+                sanitize: sanitize
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             if let trailing {
                 Image(trailing)
