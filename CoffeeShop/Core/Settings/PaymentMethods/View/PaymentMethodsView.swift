@@ -23,27 +23,23 @@ struct PaymentMethodsView: View {
     
     var body: some View {
         Group {
-            if viewModel.isLoading {
+            switch viewModel.loadState {
+            case .loading:
                 InlineLoadingView(message: "Loading PaymentMethods…")
-            } else if let error = viewModel.loadError {
+            case .failed(let message), .refreshFailed(let message):
                 InlineErrorView(
                     title: "Couldn't payment methods",
-                    message: error,
+                    message: message,
                     onRetry: { viewModel.handleRetryLoad() }
                 )
-            } else if let paymentMethods = viewModel.paymentMethods{
-                if paymentMethods.count > 0 {
-                    detailContent(paymentMethods)
-                } else{
-                    InlineErrorView(
-                        title:  "No payment methods",
-                        message: "Add a card to pay for your coffee faster.",
-                        onRetry: { viewModel.handleRetryLoad() }
-                    )
+            case .refreshing where viewModel.paymentMethods.isEmpty:
+                InlineLoadingView(message: "Loading PaymentMethods…")
+            case .loaded where viewModel.paymentMethods.isEmpty:
+                PaymentMethodEmptyStateView {
+                    showAddPaymentMethod = true
                 }
-
-            } else {
-                InlineLoadingView()
+            case .refreshing, .loaded:
+                detailContent(viewModel.paymentMethods)
             }
         }
         .navigationTitle("Payment Methods")

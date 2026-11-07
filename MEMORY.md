@@ -14,6 +14,7 @@ Last reviewed: 2026-11-03
 - Payment methods store `brand` + `last4` only. Add-card limits live in `CardFormLimit` (ISO/IEC 7812 length + Luhn, brand lengths, CVV 3 or Amex 4, expiry through the end of MM/YY). The name field keeps letters and spaces only.
 - `AppTextField` (`Components/`) is the shared text field for names and other typed input. `sanitize` is optional and runs before the keystroke appears. Add Card is the only caller. It passes `Color.Payment` for the caret and placeholder; the border and icons stay on the payment form. Login and sign-up still use `IconTextField`.
 - Coffee images are public HTTPS URLs loaded with Kingfisher, not asset names.
+- Payment methods uses one `LoadState`: `loading`, `refreshing`, `failed`, `refreshFailed`, `loaded`. Returning from Add Card uses `refreshing`, so an existing list stays on screen.
 - Commits use Conventional Commits from 2026-11-02 on (see "Commits" in `AGENTS.md`). Earlier history uses plain sentences; do not rewrite it.
 - New features follow `.cursor/skills/feature-creation-skill/SKILL.md`. A screen starts from a Figma frame URL (`get_design_context`); the response is a visual reference, not code to paste. Fill **Feature notes** there when a decision is feature-specific and not yet a permanent rule.
 

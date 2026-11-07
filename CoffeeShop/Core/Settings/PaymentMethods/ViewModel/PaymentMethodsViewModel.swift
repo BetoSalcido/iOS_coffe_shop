@@ -9,9 +9,16 @@ import Observation
 @Observable @MainActor
 final class PaymentMethodsViewModel {
     
-    private(set) var paymentMethods: [PaymentMethod]?
-    private(set) var isLoading = true
-    private(set) var loadError: String?
+    enum LoadState: Equatable {
+        case loading
+        case refreshing
+        case failed(String)
+        case refreshFailed(String)
+        case loaded
+    }
+
+    private(set) var paymentMethods: [PaymentMethod] = []
+    private(set) var loadState: LoadState = .loading
     
     private let service: any PaymentMethodsProviding
     
@@ -28,27 +35,33 @@ final class PaymentMethodsViewModel {
 private extension PaymentMethodsViewModel {
     
     func load() async {
-        isLoading = true
-        loadError = nil
-        await fetchPaymentMethods()
+        loadState = .loading
+        await fetchPaymentMethods(isRefresh: false)
     }
-    
-    func fetchPaymentMethods() async {
+
+    func fetchPaymentMethods(isRefresh: Bool) async {
+        if isRefresh {
+            loadState = .refreshing
+        }
+
         do {
             let methods = try await service.fetchPaymentMethods()
-            print(methods)
             paymentMethods = methods
-            isLoading = false
-            loadError = nil
+            loadState = .loaded
         } catch {
-            isLoading = false
-            paymentMethods = []
-            loadError = error.localizedDescription
+            if paymentMethods.isEmpty {
+                paymentMethods = []
+                loadState = isRefresh
+                    ? .refreshFailed(error.localizedDescription)
+                    : .failed(error.localizedDescription)
+            } else {
+                loadState = .loaded
+            }
         }
     }
 
     func applyDefaultLocally(id: String) {
-        paymentMethods = paymentMethods?.map { method in
+        paymentMethods = paymentMethods.map { method in
             var copy = method
             copy.isDefault = method.id == id
             return copy
@@ -68,7 +81,7 @@ extension PaymentMethodsViewModel {
     /// Reloads the list without replacing it with the full-screen loader.
     func handleRefresh() {
         Task {
-            await fetchPaymentMethods()
+            await fetchPaymentMethods(isRefresh: true)
         }
     }
     
@@ -83,8 +96,7 @@ extension PaymentMethodsViewModel {
                 try await service.setDefaultPaymentMethod(id: method.id)
             } catch {
                 // Re-sync from source of truth if the remote call fails.
-                await fetchPaymentMethods()
-                loadError = error.localizedDescription
+                await fetchPaymentMethods(isRefresh: true)
             }
         }
     }
