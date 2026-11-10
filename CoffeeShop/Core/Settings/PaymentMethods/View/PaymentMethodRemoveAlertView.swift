@@ -29,7 +29,7 @@ struct PaymentMethodRemoveAlertView: View {
 
     private var scrim: some View {
         Color.black
-            .opacity(colorScheme == .dark ? 0.62 : 0.62)
+            .opacity(0.62)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()
             .contentShape(Rectangle())
