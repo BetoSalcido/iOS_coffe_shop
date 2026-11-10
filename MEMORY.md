@@ -2,7 +2,7 @@
 
 Persistent project state for agents. Read at the start of a task; update when a decision or status changes. Keep entries short and current, and delete what is no longer true.
 
-Last reviewed: 2026-11-09
+Last reviewed: 2026-11-10
 
 ## Decisions
 
@@ -13,6 +13,7 @@ Last reviewed: 2026-11-09
 - Favorites store coffee IDs only. The app fetches the coffee rows separately with `id=in.(...)`.
 - Payment methods store `brand` + `last4` only. Add-card limits live in `CardFormLimit` (ISO/IEC 7812 length + Luhn, brand lengths, CVV 3 or Amex 4, expiry through the end of MM/YY). The name field keeps letters and spaces only.
 - `AppTextField` (`Components/`) is the shared text field for names and other typed input. `sanitize` is optional and runs before the keystroke appears. The payment method form is the only caller. It passes `Color.Payment` for the caret and placeholder; the border and icons stay on the form. Login and sign-up still use `IconTextField`.
+- Delete confirmation is `PaymentMethodRemoveAlertView`, opened from Delete Payment Method with `.sheet(isPresented:)`. `showsRemoveConfirmation` is a settable `var` so the view can pass `$viewModel.showsRemoveConfirmation`. An `.overlay` cannot cover the navigation bar. Copy matches the Figma dialog (Spanish). Confirm calls `deletePaymentMethod` and then leaves the form so the list refreshes. The dialog names the saved card, not a number typed into the form.
 - Coffee images are public HTTPS URLs loaded with Kingfisher, not asset names.
 - Payment methods uses one `LoadState`: `loading`, `refreshing`, `failed`, `refreshFailed`, `loaded`. Returning from `PaymentMethodFormView` uses `refreshing`, so an existing list stays on screen. Add and edit share that screen through `formRoute: PaymentMethodFormMode`. Edit prefills name, expiry, and default, and shows `brand` + `last4`. A new number replaces them and then requires a CVV. `updatePaymentMethod` writes the same columns as add.
 - Commits use Conventional Commits from 2026-11-02 on (see "Commits" in `AGENTS.md`). Earlier history uses plain sentences; do not rewrite it.
@@ -26,7 +27,7 @@ Last reviewed: 2026-11-09
 | Catalog | `CoffeeCatalogService` | `RemoteCoffeeCatalogService` | Done |
 | Coffee detail | `CoffeeDetailsService` | `RemoteCoffeeDetailsService` | Done |
 | Favorites | `FavoritesService` | `RemoteFavoritesService` | Done |
-| Payment methods | `PaymentMethodsService` | `RemotePaymentMethodsService` | List, add, and edit form done. Save stays disabled until the form is valid. Persists `brand` + `last4` only. |
+| Payment methods | `PaymentMethodsService` | `RemotePaymentMethodsService` | List, add, edit, and delete confirmation done. Save stays disabled until the form is valid. Persists `brand` + `last4` only. |
 | Order (cart) | `OrderService` | None | UI done. `handlePlaceOrder` is a TODO. `002_orders.sql` exists but is not wired. |
 | Settings | `SettingsService` | None | Done |
 | Checkout | None | None | Placeholder, not reachable from navigation |

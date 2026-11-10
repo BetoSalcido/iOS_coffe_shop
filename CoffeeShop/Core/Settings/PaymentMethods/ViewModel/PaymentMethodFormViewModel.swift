@@ -14,8 +14,11 @@ final class PaymentMethodFormViewModel {
     /// always invalidate SwiftUI in the same turn as the form write.
     private(set) var inputRevision = 0
     private(set) var isSaving = false
+    private(set) var isDeleting = false
+    var showsRemoveConfirmation = false
     private(set) var errorMessage: String?
     private(set) var didSave = false
+    private(set) var didDelete = false
 
     private let service: any PaymentMethodsProviding
 
@@ -70,17 +73,43 @@ final class PaymentMethodFormViewModel {
 
     var canSubmit: Bool {
         _ = inputRevision
-        return form.isValid && !isSaving
+        return form.isValid && !isSaving && !isDeleting
+    }
+
+    /// Brand and last four of the saved card this dialog would remove.
+    var removeBrandName: String {
+        if case .edit(let method) = mode {
+            return method.brand.displayName
+        }
+        return form.persistedBrand.displayName
+    }
+
+    var removeLast4: String {
+        if case .edit(let method) = mode {
+            return method.last4
+        }
+        return form.persistedLast4
     }
 
     func handleSubmit() {
         guard canSubmit else { return }
         Task { await save() }
     }
-    
+
     func handleDelete() {
-        // NOTE: Behavior will be added in the next commit.
-        print("Delete Tapped")
+        guard isEditing, !isSaving, !isDeleting else { return }
+        errorMessage = nil
+        showsRemoveConfirmation = true
+    }
+
+    func handleCancelDelete() {
+        guard !isDeleting else { return }
+        showsRemoveConfirmation = false
+    }
+
+    func handleConfirmDelete() {
+        guard isEditing, !isDeleting else { return }
+        Task { await deletePayment() }
     }
 
     func handleCardholderNameChanged(_ raw: String) {
@@ -131,6 +160,17 @@ private extension PaymentMethodFormViewModel {
     }
     
     func deletePayment() async {
-        
+        guard case .edit(let method) = mode else { return }
+        isDeleting = true
+        errorMessage = nil
+        do {
+            try await service.deletePaymentMethod(id: method.id)
+            isDeleting = false
+            showsRemoveConfirmation = false
+            didDelete = true
+        } catch {
+            isDeleting = false
+            errorMessage = error.localizedDescription
+        }
     }
 }

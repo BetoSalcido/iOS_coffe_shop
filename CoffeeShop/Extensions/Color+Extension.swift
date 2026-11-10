@@ -88,5 +88,18 @@ extension Color {
         static let deleteBackground = Color("PaymentDeleteBackground")
         static let deleteText = Color("PaymentDeleteText")
         static let borderButton = Color("PaymentDeleteBorder")
+        static let removeSurface = Color("PaymentRemoveSurface")
+        static let removeBorder = Color("PaymentRemoveBorder")
+        static let removeIconFill = Color("PaymentRemoveIconFill")
+        static let removeIconBorder = Color("PaymentRemoveIconBorder")
+        static let removeTitle = Color("PaymentRemoveTitle")
+        static let removeBody = Color("PaymentRemoveBody")
+        static let removeChipFill = Color("PaymentRemoveChipFill")
+        static let removeChipBorder = Color("PaymentRemoveChipBorder")
+        static let removeChipText = Color("PaymentRemoveChipText")
+        static let removeChipMuted = Color("PaymentRemoveChipMuted")
+        static let removeChipIcon = Color("PaymentRemoveChipIcon")
+        static let removeConfirm = Color("PaymentRemoveConfirm")
+        static let removeCancelText = Color("PaymentRemoveCancelText")
     }
 }

@@ -24,6 +24,8 @@ struct PaymentMethodFormView: View {
     }
 
     var body: some View {
+        @Bindable var viewModel = viewModel
+
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 PaymentMethodFormHeaderView(
@@ -54,6 +56,24 @@ struct PaymentMethodFormView: View {
             if didSave {
                 dismiss()
             }
+        }
+        .fullScreenCover(isPresented: $viewModel.showsRemoveConfirmation, onDismiss: {
+            if viewModel.didDelete {
+                dismiss()
+            }
+        }) {
+            PaymentMethodRemoveAlertView(
+                brand: viewModel.removeBrandName,
+                last4: viewModel.removeLast4,
+                isDeleting: viewModel.isDeleting,
+                errorMessage: viewModel.errorMessage,
+                onConfirm: { viewModel.handleConfirmDelete() },
+                onCancel: { viewModel.handleCancelDelete() }
+            )
+            .presentationBackground(.clear)
+            .presentationDragIndicator(.hidden)
+            .presentationCornerRadius(0)
+            .interactiveDismissDisabled(viewModel.isDeleting)
         }
     }
 }
