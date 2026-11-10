@@ -24,7 +24,7 @@ final class RemotePaymentMethodsService: PaymentMethodsProviding {
         return rows.map { $0.toDomain() }
     }
 
-    func addPaymentMethod(_ form: NewPaymentMethodForm) async throws {
+    func addPaymentMethod(_ form: PaymentMethodForm) async throws {
         let userId = try requireUserId()
         try form.validate()
 

@@ -21,7 +21,7 @@ final class PaymentMethodsService: PaymentMethodsProviding {
         }
     }
 
-    func addPaymentMethod(_ form: NewPaymentMethodForm) async throws {
+    func addPaymentMethod(_ form: PaymentMethodForm) async throws {
         try form.validate()
 
         if form.setAsDefault {

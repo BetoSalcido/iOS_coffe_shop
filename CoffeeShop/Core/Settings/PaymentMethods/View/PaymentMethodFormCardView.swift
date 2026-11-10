@@ -1,12 +1,12 @@
 //
-//  AddPaymentMethodCardView.swift
+//  PaymentMethodFormCardView.swift
 //  CoffeeShop
 //
 
 import SwiftUI
 
-struct AddPaymentMethodCardView: View {
-    let form: NewPaymentMethodForm
+struct PaymentMethodFormCardView: View {
+    let form: PaymentMethodForm
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -79,13 +79,13 @@ struct AddPaymentMethodCardView: View {
 }
 
 #Preview("Empty") {
-    AddPaymentMethodCardView(form: NewPaymentMethodForm())
+    PaymentMethodFormCardView(form: PaymentMethodForm())
         .padding()
         .background(Color.Background.appBackground)
 }
 
 #Preview("Filled") {
-    AddPaymentMethodCardView(form: DeveloperPreview().filledNewPaymentMethodForm)
+    PaymentMethodFormCardView(form: DeveloperPreview().filledPaymentMethodForm)
         .padding()
         .background(Color.Background.appBackground)
 }

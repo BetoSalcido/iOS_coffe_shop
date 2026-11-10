@@ -2,7 +2,7 @@
 
 Persistent project state for agents. Read at the start of a task; update when a decision or status changes. Keep entries short and current, and delete what is no longer true.
 
-Last reviewed: 2026-11-03
+Last reviewed: 2026-11-09
 
 ## Decisions
 
@@ -12,9 +12,9 @@ Last reviewed: 2026-11-03
 - The access token refreshes after the splash screen and when the app returns to the foreground (`refreshSessionIfNeeded`). If refresh fails, Keychain is cleared and the user goes to Login.
 - Favorites store coffee IDs only. The app fetches the coffee rows separately with `id=in.(...)`.
 - Payment methods store `brand` + `last4` only. Add-card limits live in `CardFormLimit` (ISO/IEC 7812 length + Luhn, brand lengths, CVV 3 or Amex 4, expiry through the end of MM/YY). The name field keeps letters and spaces only.
-- `AppTextField` (`Components/`) is the shared text field for names and other typed input. `sanitize` is optional and runs before the keystroke appears. Add Card is the only caller. It passes `Color.Payment` for the caret and placeholder; the border and icons stay on the payment form. Login and sign-up still use `IconTextField`.
+- `AppTextField` (`Components/`) is the shared text field for names and other typed input. `sanitize` is optional and runs before the keystroke appears. The payment method form is the only caller. It passes `Color.Payment` for the caret and placeholder; the border and icons stay on the form. Login and sign-up still use `IconTextField`.
 - Coffee images are public HTTPS URLs loaded with Kingfisher, not asset names.
-- Payment methods uses one `LoadState`: `loading`, `refreshing`, `failed`, `refreshFailed`, `loaded`. Returning from Add Card uses `refreshing`, so an existing list stays on screen.
+- Payment methods uses one `LoadState`: `loading`, `refreshing`, `failed`, `refreshFailed`, `loaded`. Returning from `PaymentMethodFormView` uses `refreshing`, so an existing list stays on screen. That screen and `PaymentMethodForm` cover add and edit; edit is not wired. `addPaymentMethod` stays the create API. Fields live in `PaymentMethodFormFieldsView`.
 - Commits use Conventional Commits from 2026-11-02 on (see "Commits" in `AGENTS.md`). Earlier history uses plain sentences; do not rewrite it.
 - New features follow `.cursor/skills/feature-creation-skill/SKILL.md`. A screen starts from a Figma frame URL (`get_design_context`); the response is a visual reference, not code to paste. Fill **Feature notes** there when a decision is feature-specific and not yet a permanent rule.
 
@@ -26,7 +26,7 @@ Last reviewed: 2026-11-03
 | Catalog | `CoffeeCatalogService` | `RemoteCoffeeCatalogService` | Done |
 | Coffee detail | `CoffeeDetailsService` | `RemoteCoffeeDetailsService` | Done |
 | Favorites | `FavoritesService` | `RemoteFavoritesService` | Done |
-| Payment methods | `PaymentMethodsService` | `RemotePaymentMethodsService` | List and Add Payment Method UI done. Add Card stays disabled until the form is valid. Saves `brand` + `last4` only. |
+| Payment methods | `PaymentMethodsService` | `RemotePaymentMethodsService` | List and payment method form UI done. Add Card stays disabled until the form is valid. Saves `brand` + `last4` only. Edit is not wired. |
 | Order (cart) | `OrderService` | None | UI done. `handlePlaceOrder` is a TODO. `002_orders.sql` exists but is not wired. |
 | Settings | `SettingsService` | None | Done |
 | Checkout | None | None | Placeholder, not reachable from navigation |

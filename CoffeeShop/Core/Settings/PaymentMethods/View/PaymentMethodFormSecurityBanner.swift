@@ -1,11 +1,11 @@
 //
-//  AddPaymentMethodSecurityBanner.swift
+//  PaymentMethodFormSecurityBanner.swift
 //  CoffeeShop
 //
 
 import SwiftUI
 
-struct AddPaymentMethodSecurityBanner: View {
+struct PaymentMethodFormSecurityBanner: View {
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
             Image("PaymentLockIcon")
@@ -31,7 +31,7 @@ struct AddPaymentMethodSecurityBanner: View {
 }
 
 #Preview {
-    AddPaymentMethodSecurityBanner()
+    PaymentMethodFormSecurityBanner()
         .padding()
         .background(Color.Background.appBackground)
 }

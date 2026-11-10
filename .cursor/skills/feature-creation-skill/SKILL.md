@@ -154,7 +154,6 @@ These screens exist with an empty view model and no service. Fill them; do not a
 | Promos | `Core/Settings/Promos/` | Settings |
 | Help Center | `Core/Settings/HelpCenter/` | Settings |
 | Checkout | `Core/Checkout/` | Not wired. `OrderViewModel.handlePlaceOrder` is still a TODO |
-| Add Payment Method | `Core/Settings/PaymentMethods/` | Payment Methods. Form is a placeholder; list is done |
 
 `OrderHistoryEntry` is an empty struct. Give it an identity before using it in a list or as a navigation value.
 
@@ -166,6 +165,7 @@ Copy the pair that matches the work. Add a row here when a new feature becomes t
 | --- | --- |
 | List that loads | `CoffeeCatalogView` + `CoffeeCatalogViewModel` |
 | Form | `LoginView` + `LoginViewModel` |
+| Payment method form (add and edit) | `PaymentMethodFormView` + `PaymentMethodFormViewModel` |
 | Two services | `FavoritesView` + `FavoritesViewModel` |
 | Sectioned screen | `CoffeeDetailView` (header, body, footer) |
 | Local + remote service | `PaymentMethodsProviding`, `PaymentMethodsService`, `RemotePaymentMethodsService` |

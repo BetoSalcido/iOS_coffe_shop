@@ -157,7 +157,7 @@ After three seconds, `RootView` asks `auth` whether a session exists and whether
 | Login | `showSignUp` | `SignUpView` |
 | Settings | `viewModel.selectedRoute: SettingAction` | Edit Profile, Payment Methods, Order History, Delivery Addresses, Promos, Help Center |
 | Settings | `viewModel.showLoginSheet` | `LoginView` sheet |
-| Payment Methods | `showAddPaymentMethod` | `AddPaymentMethodView` |
+| Payment Methods | `showPaymentMethodForm` | `PaymentMethodFormView` |
 
 `SettingAction.login` is not pushed. `handleSettingSelection` opens the sheet instead. Logout stays on Settings and reloads the list.
 
@@ -382,7 +382,7 @@ Every screen view has a `#Preview`. Rules:
 | `SettingsView` | `NavigationStack` + `live` |
 | `EditProfileView` | `NavigationStack` |
 | `PaymentMethodsView` | `live.paymentMethods`, plus sample cards and empty state from `DeveloperPreview().paymentMethods` |
-| `AddPaymentMethodView` | `live.paymentMethods`, plus `"Filled form data"` from `DeveloperPreview().filledNewPaymentMethodForm` |
+| `PaymentMethodFormView` | `live.paymentMethods`, plus `"Filled form data"` from `DeveloperPreview().filledPaymentMethodForm` |
 | `OrderHistoryView` | `NavigationStack` |
 | `DeliveryAddressesView` | `NavigationStack` |
 | `PromosView` | `NavigationStack` |

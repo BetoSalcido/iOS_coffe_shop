@@ -40,9 +40,9 @@ extension DeveloperPreview {
     /// Empty list — useful for designing the empty state.
     var emptyPaymentMethods: [PaymentMethod] { [] }
 
-    /// Pre-filled Add form (Visa test number shape — demo only, never persist).
-    var filledNewPaymentMethodForm: NewPaymentMethodForm {
-        NewPaymentMethodForm(
+    /// Pre-filled payment method form (Visa test number shape — demo only, never persist).
+    var filledPaymentMethodForm: PaymentMethodForm {
+        PaymentMethodForm(
             cardholderName: "Beto Salcido",
             cardNumber: "4242424242424242",
             expirationMonth: "12",
@@ -52,8 +52,8 @@ extension DeveloperPreview {
         )
     }
 
-    var emptyNewPaymentMethodForm: NewPaymentMethodForm {
-        NewPaymentMethodForm()
+    var emptyPaymentMethodForm: PaymentMethodForm {
+        PaymentMethodForm()
     }
 
     static func makePaymentMethod(

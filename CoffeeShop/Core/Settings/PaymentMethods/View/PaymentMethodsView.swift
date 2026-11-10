@@ -7,7 +7,7 @@ import SwiftUI
 
 struct PaymentMethodsView: View {
     @State private var viewModel: PaymentMethodsViewModel
-    @State private var showAddPaymentMethod = false
+    @State private var showPaymentMethodForm = false
     
     private let paymentMethodsService: any PaymentMethodsProviding
     
@@ -36,7 +36,7 @@ struct PaymentMethodsView: View {
                 InlineLoadingView(message: "Loading PaymentMethods…")
             case .loaded where viewModel.paymentMethods.isEmpty:
                 PaymentMethodEmptyStateView {
-                    showAddPaymentMethod = true
+                    showPaymentMethodForm = true
                 }
             case .refreshing, .loaded:
                 detailContent(viewModel.paymentMethods)
@@ -45,10 +45,10 @@ struct PaymentMethodsView: View {
         .navigationTitle("Payment Methods")
         .navigationBarTitleDisplayMode(.inline)
         .blackNavigationBarStyle()
-        .navigationDestination(isPresented: $showAddPaymentMethod) {
-            AddPaymentMethodView(paymentMethodsService: paymentMethodsService)
+        .navigationDestination(isPresented: $showPaymentMethodForm) {
+            PaymentMethodFormView(paymentMethodsService: paymentMethodsService)
         }
-        .onChange(of: showAddPaymentMethod) { _, isShowing in
+        .onChange(of: showPaymentMethodForm) { _, isShowing in
             if !isShowing {
                 viewModel.handleRefresh()
             }
@@ -76,7 +76,7 @@ struct PaymentMethodsView: View {
         .background(Color(hex: "#F9F9F9"))
         .safeAreaInset(edge: .bottom) {
             PaymentMethodFooterView(onTap: {
-                showAddPaymentMethod = true
+                showPaymentMethodForm = true
             })
             .padding(.horizontal, 16)
             .padding(.vertical, 12)

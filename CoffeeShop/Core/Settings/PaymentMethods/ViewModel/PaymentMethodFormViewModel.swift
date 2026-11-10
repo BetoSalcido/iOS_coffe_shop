@@ -1,5 +1,5 @@
 //
-//  AddPaymentMethodViewModel.swift
+//  PaymentMethodFormViewModel.swift
 //  CoffeeShop
 //
 
@@ -7,8 +7,8 @@ import Foundation
 import Observation
 
 @Observable @MainActor
-final class AddPaymentMethodViewModel {
-    var form: NewPaymentMethodForm
+final class PaymentMethodFormViewModel {
+    var form: PaymentMethodForm
     /// Bumped after each keystroke so the button refreshes. UIKit edits do not
     /// always invalidate SwiftUI in the same turn as the form write.
     private(set) var inputRevision = 0
@@ -20,7 +20,7 @@ final class AddPaymentMethodViewModel {
 
     init(
         service: any PaymentMethodsProviding,
-        form: NewPaymentMethodForm = NewPaymentMethodForm(setAsDefault: true)
+        form: PaymentMethodForm = PaymentMethodForm(setAsDefault: true)
     ) {
         self.service = service
         self.form = form
@@ -64,7 +64,7 @@ final class AddPaymentMethodViewModel {
 }
 
 // MARK: - Private Methods
-private extension AddPaymentMethodViewModel {
+private extension PaymentMethodFormViewModel {
     func save() async {
         isSaving = true
         errorMessage = nil

@@ -1,12 +1,12 @@
 //
-//  AddPaymentMethodFormView.swift
+//  PaymentMethodFormFieldsView.swift
 //  CoffeeShop
 //
 
 import SwiftUI
 
-struct AddPaymentMethodFormView: View {
-    @Bindable var viewModel: AddPaymentMethodViewModel
+struct PaymentMethodFormFieldsView: View {
+    @Bindable var viewModel: PaymentMethodFormViewModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {

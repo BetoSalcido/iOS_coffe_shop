@@ -1,20 +1,20 @@
 //
-//  AddPaymentMethodView.swift
+//  PaymentMethodFormView.swift
 //  CoffeeShop
 //
 
 import SwiftUI
 
-struct AddPaymentMethodView: View {
+struct PaymentMethodFormView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var viewModel: AddPaymentMethodViewModel
+    @State private var viewModel: PaymentMethodFormViewModel
 
     init(
         paymentMethodsService: any PaymentMethodsProviding,
-        form: NewPaymentMethodForm = NewPaymentMethodForm(setAsDefault: true)
+        form: PaymentMethodForm = PaymentMethodForm(setAsDefault: true)
     ) {
         _viewModel = State(
-            wrappedValue: AddPaymentMethodViewModel(
+            wrappedValue: PaymentMethodFormViewModel(
                 service: paymentMethodsService,
                 form: form
             )
@@ -24,10 +24,10 @@ struct AddPaymentMethodView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                AddPaymentMethodHeaderView()
-                AddPaymentMethodCardView(form: viewModel.form)
-                AddPaymentMethodFormView(viewModel: viewModel)
-                AddPaymentMethodSecurityBanner()
+                PaymentMethodFormHeaderView()
+                PaymentMethodFormCardView(form: viewModel.form)
+                PaymentMethodFormFieldsView(viewModel: viewModel)
+                PaymentMethodFormSecurityBanner()
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 24)
@@ -55,22 +55,22 @@ struct AddPaymentMethodView: View {
 
 #Preview {
     NavigationStack {
-        AddPaymentMethodView(paymentMethodsService: AppServiceProvider.live.paymentMethods)
+        PaymentMethodFormView(paymentMethodsService: AppServiceProvider.live.paymentMethods)
     }
 }
 
 #Preview("Filled form") {
     NavigationStack {
-        AddPaymentMethodView(
+        PaymentMethodFormView(
             paymentMethodsService: AppServiceProvider.live.paymentMethods,
-            form: DeveloperPreview().filledNewPaymentMethodForm
+            form: DeveloperPreview().filledPaymentMethodForm
         )
     }
 }
 
 #Preview("Dark") {
     NavigationStack {
-        AddPaymentMethodView(paymentMethodsService: AppServiceProvider.live.paymentMethods)
+        PaymentMethodFormView(paymentMethodsService: AppServiceProvider.live.paymentMethods)
     }
     .preferredColorScheme(.dark)
 }

@@ -1,11 +1,11 @@
 //
-//  AddPaymentMethodHeaderView.swift
+//  PaymentMethodFormHeaderView.swift
 //  CoffeeShop
 //
 
 import SwiftUI
 
-struct AddPaymentMethodHeaderView: View {
+struct PaymentMethodFormHeaderView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("Add Payment Method")
@@ -23,7 +23,7 @@ struct AddPaymentMethodHeaderView: View {
 }
 
 #Preview {
-    AddPaymentMethodHeaderView()
+    PaymentMethodFormHeaderView()
         .padding()
         .background(Color.Background.appBackground)
 }

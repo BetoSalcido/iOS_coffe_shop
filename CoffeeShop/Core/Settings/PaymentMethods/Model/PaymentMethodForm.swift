@@ -1,12 +1,13 @@
 //
-//  NewPaymentMethodForm.swift
+//  PaymentMethodForm.swift
 //  CoffeeShop
 //
 
 import Foundation
 
-/// Mutable form state for `AddPaymentMethodView`. Never persist `cardNumber` / `cvv`.
-struct NewPaymentMethodForm {
+/// Mutable form state for adding or editing a card in `PaymentMethodFormView`.
+/// Never persist `cardNumber` / `cvv`.
+struct PaymentMethodForm {
     var cardholderName = ""
     var cardNumber = ""
     var expirationMonth = ""
