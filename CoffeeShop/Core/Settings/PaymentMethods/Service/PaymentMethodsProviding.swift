@@ -9,6 +9,7 @@ import Foundation
 protocol PaymentMethodsProviding: AnyObject {
     func fetchPaymentMethods() async throws -> [PaymentMethod]
     func addPaymentMethod(_ form: PaymentMethodForm) async throws
+    func updatePaymentMethod(id: String, form: PaymentMethodForm) async throws
     func setDefaultPaymentMethod(id: String) async throws
     func deletePaymentMethod(id: String) async throws
 }

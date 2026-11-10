@@ -8,6 +8,7 @@ import Observation
 
 @Observable @MainActor
 final class PaymentMethodFormViewModel {
+    let mode: PaymentMethodFormMode
     var form: PaymentMethodForm
     /// Bumped after each keystroke so the button refreshes. UIKit edits do not
     /// always invalidate SwiftUI in the same turn as the form write.
@@ -20,10 +21,51 @@ final class PaymentMethodFormViewModel {
 
     init(
         service: any PaymentMethodsProviding,
-        form: PaymentMethodForm = PaymentMethodForm(setAsDefault: true)
+        mode: PaymentMethodFormMode = .add,
+        form: PaymentMethodForm? = nil
     ) {
         self.service = service
-        self.form = form
+        self.mode = mode
+        if let form {
+            self.form = form
+        } else {
+            switch mode {
+            case .add:
+                self.form = PaymentMethodForm(setAsDefault: true)
+            case .edit(let method):
+                self.form = .editing(method)
+            }
+        }
+    }
+
+    var isEditing: Bool {
+        if case .edit = mode { return true }
+        return false
+    }
+
+    var title: String {
+        isEditing ? "Edit Payment Method" : "Add Payment Method"
+    }
+
+    var subtitle: String {
+        isEditing
+            ? "Update the name, expiry, or default card. The full number is not stored."
+            : "Securely save your payment details for a faster checkout ritual."
+    }
+
+    var submitTitle: String {
+        isEditing ? "Save Changes" : "Add Card"
+    }
+    
+    var deleteTitle: String {
+        "Delete Payment Method"
+    }
+
+    var cardNumberPlaceholder: String {
+        if case .edit(let method) = mode {
+            return "•••• •••• •••• \(method.last4)"
+        }
+        return "0000000000000000"
     }
 
     var canSubmit: Bool {
@@ -31,9 +73,14 @@ final class PaymentMethodFormViewModel {
         return form.isValid && !isSaving
     }
 
-    func handleAddCard() {
+    func handleSubmit() {
         guard canSubmit else { return }
         Task { await save() }
+    }
+    
+    func handleDelete() {
+        // NOTE: Behavior will be added in the next commit.
+        print("Delete Tapped")
     }
 
     func handleCardholderNameChanged(_ raw: String) {
@@ -69,12 +116,21 @@ private extension PaymentMethodFormViewModel {
         isSaving = true
         errorMessage = nil
         do {
-            try await service.addPaymentMethod(form)
+            switch mode {
+            case .add:
+                try await service.addPaymentMethod(form)
+            case .edit(let method):
+                try await service.updatePaymentMethod(id: method.id, form: form)
+            }
             isSaving = false
             didSave = true
         } catch {
             isSaving = false
             errorMessage = error.localizedDescription
         }
+    }
+    
+    func deletePayment() async {
+        
     }
 }

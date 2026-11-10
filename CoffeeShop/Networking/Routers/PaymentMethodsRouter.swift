@@ -9,6 +9,7 @@ import Foundation
 enum PaymentMethodsRouter: URLRequestConvertible {
     case fetchMethods(userId: String)
     case addMethod(PaymentMethodInsertDTO)
+    case updateMethod(id: String, userId: String, payload: PaymentMethodUpdateDTO)
     case setDefault(id: String, userId: String)
     case clearDefault(userId: String)
     case deleteMethod(id: String, userId: String)
@@ -19,7 +20,7 @@ enum PaymentMethodsRouter: URLRequestConvertible {
             return .get
         case .addMethod:
             return .post
-        case .setDefault, .clearDefault:
+        case .updateMethod, .setDefault, .clearDefault:
             return .patch
         case .deleteMethod:
             return .delete
@@ -45,6 +46,17 @@ enum PaymentMethodsRouter: URLRequestConvertible {
 
         case .addMethod:
             guard let built = URL(string: base + "/payment_methods") else {
+                throw NetworkingService.NetworkError.invalidURL
+            }
+            url = built
+
+        case .updateMethod(let id, let userId, _):
+            var components = URLComponents(string: base + "/payment_methods")
+            components?.queryItems = [
+                URLQueryItem(name: "id", value: "eq.\(id)"),
+                URLQueryItem(name: "user_id", value: "eq.\(userId)"),
+            ]
+            guard let built = components?.url else {
                 throw NetworkingService.NetworkError.invalidURL
             }
             url = built
@@ -88,6 +100,9 @@ enum PaymentMethodsRouter: URLRequestConvertible {
 
         switch self {
         case .addMethod(let payload):
+            request.httpBody = try JSONEncoder().encode(payload)
+
+        case .updateMethod(_, _, let payload):
             request.httpBody = try JSONEncoder().encode(payload)
 
         case .setDefault:

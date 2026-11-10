@@ -36,6 +36,24 @@ struct PaymentMethodInsertDTO: Encodable {
     }
 }
 
+struct PaymentMethodUpdateDTO: Encodable {
+    let brand: String
+    let last4: String
+    let cardholderName: String
+    let expirationMonth: Int
+    let expirationYear: Int
+    let isDefault: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case brand
+        case last4
+        case cardholderName = "cardholder_name"
+        case expirationMonth = "expiration_month"
+        case expirationYear = "expiration_year"
+        case isDefault = "is_default"
+    }
+}
+
 struct PaymentMethodDefaultUpdateDTO: Encodable {
     let isDefault: Bool
 

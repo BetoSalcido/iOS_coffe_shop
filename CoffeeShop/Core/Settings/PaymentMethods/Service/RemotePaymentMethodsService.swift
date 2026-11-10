@@ -34,14 +34,35 @@ final class RemotePaymentMethodsService: PaymentMethodsProviding {
 
         let payload = PaymentMethodInsertDTO(
             userId: userId,
-            brand: form.inferredBrand.rawValue,
-            last4: form.last4,
+            brand: form.persistedBrand.rawValue,
+            last4: form.persistedLast4,
             cardholderName: form.trimmedCardholderName,
             expirationMonth: form.expirationMonthNumber,
             expirationYear: form.normalizedExpirationYear,
             isDefault: form.setAsDefault
         )
         try await network.perform(PaymentMethodsRouter.addMethod(payload))
+    }
+
+    func updatePaymentMethod(id: String, form: PaymentMethodForm) async throws {
+        let userId = try requireUserId()
+        try form.validate()
+
+        if form.setAsDefault {
+            try await network.perform(PaymentMethodsRouter.clearDefault(userId: userId))
+        }
+
+        let payload = PaymentMethodUpdateDTO(
+            brand: form.persistedBrand.rawValue,
+            last4: form.persistedLast4,
+            cardholderName: form.trimmedCardholderName,
+            expirationMonth: form.expirationMonthNumber,
+            expirationYear: form.normalizedExpirationYear,
+            isDefault: form.setAsDefault
+        )
+        try await network.perform(
+            PaymentMethodsRouter.updateMethod(id: id, userId: userId, payload: payload)
+        )
     }
 
     func setDefaultPaymentMethod(id: String) async throws {

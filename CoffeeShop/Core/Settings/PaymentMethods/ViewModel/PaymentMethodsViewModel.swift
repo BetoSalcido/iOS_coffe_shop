@@ -19,6 +19,7 @@ final class PaymentMethodsViewModel {
 
     private(set) var paymentMethods: [PaymentMethod] = []
     private(set) var loadState: LoadState = .loading
+    var formRoute: PaymentMethodFormMode?
     
     private let service: any PaymentMethodsProviding
     
@@ -85,6 +86,14 @@ extension PaymentMethodsViewModel {
         }
     }
     
+    func handleAddPaymentMethod() {
+        formRoute = .add
+    }
+
+    func handleEditPaymentMethod(_ method: PaymentMethod) {
+        formRoute = .edit(method)
+    }
+
     /// Selects a card as default. Updates UI immediately, then persists via the service.
     func handleSelectDefault(_ method: PaymentMethod) {
         guard method.isDefault == false else { return }

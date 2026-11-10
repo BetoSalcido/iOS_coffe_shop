@@ -35,13 +35,38 @@ final class PaymentMethodsService: PaymentMethodsProviding {
         methods.append(
             PaymentMethod(
                 id: UUID().uuidString,
-                brand: form.inferredBrand,
-                last4: form.last4,
+                brand: form.persistedBrand,
+                last4: form.persistedLast4,
                 cardholderName: form.trimmedCardholderName,
                 expirationMonth: form.expirationMonthNumber,
                 expirationYear: form.normalizedExpirationYear,
                 isDefault: form.setAsDefault || methods.isEmpty
             )
+        )
+    }
+
+    func updatePaymentMethod(id: String, form: PaymentMethodForm) async throws {
+        try form.validate()
+        guard let index = methods.firstIndex(where: { $0.id == id }) else {
+            throw PaymentMethodsError.missingPaymentMethod
+        }
+
+        if form.setAsDefault {
+            methods = methods.map {
+                var copy = $0
+                copy.isDefault = false
+                return copy
+            }
+        }
+
+        methods[index] = PaymentMethod(
+            id: id,
+            brand: form.persistedBrand,
+            last4: form.persistedLast4,
+            cardholderName: form.trimmedCardholderName,
+            expirationMonth: form.expirationMonthNumber,
+            expirationYear: form.normalizedExpirationYear,
+            isDefault: form.setAsDefault
         )
     }
 

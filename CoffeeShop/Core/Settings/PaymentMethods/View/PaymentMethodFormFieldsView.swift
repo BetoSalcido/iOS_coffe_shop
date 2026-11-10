@@ -21,7 +21,7 @@ struct PaymentMethodFormFieldsView: View {
 
             field(title: "Card Number") {
                 textField(
-                    placeholder: "0000000000000000",
+                    placeholder: viewModel.cardNumberPlaceholder,
                     text: cardNumberBinding,
                     keyboard: .numberPad,
                     sanitize: sanitizedCardNumber,
@@ -58,7 +58,11 @@ struct PaymentMethodFormFieldsView: View {
                     .foregroundStyle(.red)
             }
 
-            addCardButton
+            submitButton
+            
+            if viewModel.isEditing {
+                deleteButton
+            }
         }
     }
 
@@ -136,26 +140,32 @@ struct PaymentMethodFormFieldsView: View {
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
-    private var addCardButton: some View {
+    private var submitButton: some View {
         Button {
-            viewModel.handleAddCard()
+            viewModel.handleSubmit()
         } label: {
             HStack(spacing: 8) {
                 if viewModel.isSaving {
                     ProgressView()
                         .tint(.white)
+                } else if viewModel.isEditing {
+                    Image(systemName: "checkmark")
+                        .resizable()
+                        .frame(width: 15, height: 15)
+                        .accessibilityHidden(true)
                 } else {
                     Image("AddCardIcon")
                         .resizable()
                         .frame(width: 22, height: 18)
                         .accessibilityHidden(true)
                 }
-                Text("Add Card")
-                    .font(.title3.weight(.semibold))
+                
+                Text(viewModel.submitTitle)
+                    .font(.body.weight(.semibold))
             }
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
-            .frame(height: 60)
+            .frame(height: 50)
             .background(Color.Payment.button)
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             .shadow(color: .black.opacity(0.1), radius: 12, y: 6)
@@ -163,6 +173,41 @@ struct PaymentMethodFormFieldsView: View {
         .buttonStyle(.plain)
         .disabled(!viewModel.canSubmit)
         .opacity(viewModel.canSubmit ? 1 : 0.45)
+    }
+    
+    private var deleteButton: some View {
+        Button {
+            viewModel.handleDelete()
+        } label: {
+            HStack(spacing: 8) {
+                if viewModel.isSaving {
+                    ProgressView()
+                    .tint(.white)
+                }
+                
+                Image(systemName: "trash")
+                    .resizable()
+                    .foregroundStyle(Color.Payment.deleteText)
+                    .frame(width: 18, height: 18)
+                    .accessibilityHidden(true)
+                
+                Text(viewModel.deleteTitle)
+                    .foregroundStyle(Color.Payment.deleteText)
+                    .font(.body.weight(.semibold))
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 50)
+            .background(Color.Payment.deleteBackground)
+            .overlay {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(Color.Payment.borderButton, lineWidth: 0.5)
+            }
+            .clipShape(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+            )
+            .shadow(color: .black.opacity(0.1), radius: 12, y: 6)
+        }
+        .buttonStyle(.plain)
     }
 
     private func field<Content: View>(
@@ -215,8 +260,9 @@ struct PaymentMethodFormFieldsView: View {
                     .accessibilityHidden(true)
             }
         }
+        .frame(height: 40)
         .padding(.horizontal, 17)
-        .padding(.vertical, 14)
+        .padding(.vertical, 5)
         .background(Color.Payment.fieldFill)
         .overlay {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
@@ -224,4 +270,36 @@ struct PaymentMethodFormFieldsView: View {
         }
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
     }
+}
+
+#Preview("Add") {
+    PaymentMethodFormFieldsView(
+        viewModel: PaymentMethodFormViewModel(
+            service: AppServiceProvider.live.paymentMethods
+        )
+    )
+    .padding()
+    .background(Color.Background.appBackground)
+}
+
+#Preview("Filled") {
+    PaymentMethodFormFieldsView(
+        viewModel: PaymentMethodFormViewModel(
+            service: AppServiceProvider.live.paymentMethods,
+            form: DeveloperPreview().filledPaymentMethodForm
+        )
+    )
+    .padding()
+    .background(Color.Background.appBackground)
+}
+
+#Preview("Edit") {
+    PaymentMethodFormFieldsView(
+        viewModel: PaymentMethodFormViewModel(
+            service: AppServiceProvider.live.paymentMethods,
+            mode: .edit(DeveloperPreview().paymentMethods[0])
+        )
+    )
+    .padding()
+    .background(Color.Background.appBackground)
 }

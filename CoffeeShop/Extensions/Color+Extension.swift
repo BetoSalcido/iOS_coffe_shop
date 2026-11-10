@@ -85,5 +85,8 @@ extension Color {
         static let bannerText = Color("PaymentBannerText")
         static let bannerBorder = Color("PaymentBannerBorder")
         static let emptyStateButtonTitlte = Color("PaymentEmptyStateButton")
+        static let deleteBackground = Color("PaymentDeleteBackground")
+        static let deleteText = Color("PaymentDeleteText")
+        static let borderButton = Color("PaymentDeleteBorder")
     }
 }

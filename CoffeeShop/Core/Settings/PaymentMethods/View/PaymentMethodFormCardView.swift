@@ -89,3 +89,9 @@ struct PaymentMethodFormCardView: View {
         .padding()
         .background(Color.Background.appBackground)
 }
+
+#Preview("Editing saved card") {
+    PaymentMethodFormCardView(form: .editing(DeveloperPreview().paymentMethods[0]))
+        .padding()
+        .background(Color.Background.appBackground)
+}

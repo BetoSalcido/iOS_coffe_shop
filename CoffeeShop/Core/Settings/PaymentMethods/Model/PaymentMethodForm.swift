@@ -14,6 +14,40 @@ struct PaymentMethodForm {
     var expirationYear = ""
     var cvv = ""
     var setAsDefault = false
+    /// Set only when this form edits a saved card. The PAN and CVV are never stored.
+    var editingID: String?
+    var savedBrand: CardBrand?
+    var savedLast4: String?
+
+    init(
+        cardholderName: String = "",
+        cardNumber: String = "",
+        expirationMonth: String = "",
+        expirationYear: String = "",
+        cvv: String = "",
+        setAsDefault: Bool = false
+    ) {
+        self.cardholderName = cardholderName
+        self.cardNumber = cardNumber
+        self.expirationMonth = expirationMonth
+        self.expirationYear = expirationYear
+        self.cvv = cvv
+        self.setAsDefault = setAsDefault
+    }
+
+    /// Name, expiry, and default come from the saved card. The number field stays empty.
+    static func editing(_ method: PaymentMethod) -> PaymentMethodForm {
+        var form = PaymentMethodForm(
+            cardholderName: method.cardholderName,
+            expirationMonth: String(format: "%02d", method.expirationMonth),
+            expirationYear: String(format: "%02d", method.expirationYear % 100),
+            setAsDefault: method.isDefault
+        )
+        form.editingID = method.id
+        form.savedBrand = method.brand
+        form.savedLast4 = method.last4
+        return form
+    }
 
     var digitsOnlyCardNumber: String {
         cardNumber.filter(\.isNumber)
@@ -33,11 +67,30 @@ struct PaymentMethodForm {
         return "\(expirationMonth)/\(expirationYear)"
     }
 
+    /// The typed PAN replaces the saved card. An empty number keeps `brand` + `last4`.
+    var keepsSavedCard: Bool {
+        savedLast4 != nil && digitsOnlyCardNumber.isEmpty
+    }
+
+    var persistedBrand: CardBrand {
+        keepsSavedCard ? (savedBrand ?? .unknown) : inferredBrand
+    }
+
+    var persistedLast4: String {
+        keepsSavedCard ? (savedLast4 ?? "") : last4
+    }
+
     var previewBrandName: String {
-        digitsOnlyCardNumber.isEmpty ? "VISA" : inferredBrand.displayName.uppercased()
+        if keepsSavedCard, let savedBrand {
+            return savedBrand.displayName.uppercased()
+        }
+        return digitsOnlyCardNumber.isEmpty ? "VISA" : inferredBrand.displayName.uppercased()
     }
 
     var previewCardNumber: String {
+        if keepsSavedCard, let savedLast4 {
+            return "•••• •••• •••• \(savedLast4)"
+        }
         let digits = digitsOnlyCardNumber
         guard !digits.isEmpty else { return "•••• •••• •••• ••••" }
         return stride(from: 0, to: digits.count, by: 4).map { offset in
@@ -82,6 +135,7 @@ struct PaymentMethodForm {
     }
 
     var isCardNumberValid: Bool {
+        if keepsSavedCard { return true }
         let digits = digitsOnlyCardNumber
         guard digits.allSatisfy(\.isNumber) else { return false }
         guard CardFormLimit.accepts(length: digits.count, for: inferredBrand) else { return false }
@@ -96,7 +150,8 @@ struct PaymentMethodForm {
     }
 
     var isCVVValid: Bool {
-        cvv.allSatisfy(\.isNumber) && cvv.count == CardFormLimit.cvvLength(for: inferredBrand)
+        if keepsSavedCard { return true }
+        return cvv.allSatisfy(\.isNumber) && cvv.count == CardFormLimit.cvvLength(for: inferredBrand)
     }
 
     func validate() throws {

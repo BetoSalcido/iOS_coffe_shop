@@ -11,6 +11,7 @@ struct PaymentMethodItem: View {
     
     let paymentMethod: PaymentMethod
     let onTap: () -> Void
+    let onTapEdit: () -> Void
     
     private var paymentMethodImage: Image {
         switch paymentMethod.brand {
@@ -44,9 +45,19 @@ struct PaymentMethodItem: View {
                 
                 Spacer(minLength: 0)
                 
-                if paymentMethod.isDefault {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(.green)
+                HStack {
+  
+                    if paymentMethod.isDefault {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(.green)
+                    }
+                    
+                    Button(action: onTapEdit) {
+                        Image("EditPaymentMethodIcon")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 30, height: 30)
+                    }
                 }
             }
             .frame(maxWidth: .infinity, minHeight: 40)
@@ -69,8 +80,8 @@ struct PaymentMethodItem: View {
 
 #Preview {
     VStack(spacing: 12) {
-        PaymentMethodItem(paymentMethod: DeveloperPreview().paymentMethods[0], onTap: {})
-        PaymentMethodItem(paymentMethod: DeveloperPreview().paymentMethods[1], onTap: {})
+        PaymentMethodItem(paymentMethod: DeveloperPreview().paymentMethods[0], onTap: {}, onTapEdit: {})
+        PaymentMethodItem(paymentMethod: DeveloperPreview().paymentMethods[1], onTap: {}, onTapEdit: {})
     }
     .padding(.horizontal)
 }

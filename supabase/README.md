@@ -219,6 +219,8 @@ PATCH  /rest/v1/payment_methods?user_id=eq.{user_uuid}&is_default=eq.true
        { "is_default": false }   -- clear current default before setting a new one
 PATCH  /rest/v1/payment_methods?id=eq.{method_uuid}&user_id=eq.{user_uuid}
        { "is_default": true }
+PATCH  /rest/v1/payment_methods?id=eq.{method_uuid}&user_id=eq.{user_uuid}
+       { "brand", "last4", "cardholder_name", "expiration_month", "expiration_year", "is_default" }
 DELETE /rest/v1/payment_methods?id=eq.{method_uuid}&user_id=eq.{user_uuid}
 ```
 

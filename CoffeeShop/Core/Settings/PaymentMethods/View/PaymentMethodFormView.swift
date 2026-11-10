@@ -11,11 +11,13 @@ struct PaymentMethodFormView: View {
 
     init(
         paymentMethodsService: any PaymentMethodsProviding,
-        form: PaymentMethodForm = PaymentMethodForm(setAsDefault: true)
+        mode: PaymentMethodFormMode = .add,
+        form: PaymentMethodForm? = nil
     ) {
         _viewModel = State(
             wrappedValue: PaymentMethodFormViewModel(
                 service: paymentMethodsService,
+                mode: mode,
                 form: form
             )
         )
@@ -24,7 +26,10 @@ struct PaymentMethodFormView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                PaymentMethodFormHeaderView()
+                PaymentMethodFormHeaderView(
+                    title: viewModel.title,
+                    subtitle: viewModel.subtitle
+                )
                 PaymentMethodFormCardView(form: viewModel.form)
                 PaymentMethodFormFieldsView(viewModel: viewModel)
                 PaymentMethodFormSecurityBanner()
@@ -37,7 +42,7 @@ struct PaymentMethodFormView: View {
         .navigationBarBackButtonHidden(false)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("Add Payment Method")
+                Text(viewModel.title)
                     .font(.title3.weight(.semibold))
                     .foregroundStyle(Color.Payment.brand)
             }
@@ -64,6 +69,15 @@ struct PaymentMethodFormView: View {
         PaymentMethodFormView(
             paymentMethodsService: AppServiceProvider.live.paymentMethods,
             form: DeveloperPreview().filledPaymentMethodForm
+        )
+    }
+}
+
+#Preview("Edit") {
+    NavigationStack {
+        PaymentMethodFormView(
+            paymentMethodsService: AppServiceProvider.live.paymentMethods,
+            mode: .edit(DeveloperPreview().paymentMethods[0])
         )
     }
 }
